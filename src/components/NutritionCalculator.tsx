@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { NutritionProfile, DailyIntake } from "../types";
-import { Scale, Target, Droplet, Flame, Sparkles, Plus, RotateCcw, Drumstick, RefreshCw } from "lucide-react";
+import { Scale, Target, Droplet, Flame, Sparkles, Plus, RotateCcw, Drumstick, RefreshCw, Footprints } from "lucide-react";
 
 interface NutritionCalculatorProps {
   onProfileUpdated?: (profile: NutritionProfile) => void;
@@ -27,7 +27,8 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
     date: getTodayDateString(),
     calories: 0,
     protein: 0,
-    water: 0
+    water: 0,
+    steps: 0
   });
 
   // Calculate targets dynamically
@@ -73,7 +74,8 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
       protein: proteinTarget,
       carbs: carbTarget,
       fat: fatTarget,
-      water: Math.round(waterTargetLiters * 1000) // target in ml
+      water: Math.round(waterTargetLiters * 1000), // target in ml
+      steps: activityLevel === "extreme" ? 15000 : 10000
     };
 
     setProfile(newProfile);
@@ -93,7 +95,8 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
     const storedLS = localStorage.getItem(`calisthenics_nutrition_${todayStr}`);
     if (storedLS) {
       try {
-        setTodayLog(JSON.parse(storedLS));
+        const parsed = JSON.parse(storedLS);
+        setTodayLog({ ...parsed, steps: parsed.steps || 0 });
       } catch (e) {
         console.error("Failed loading nutrition log:", e);
       }
@@ -102,7 +105,8 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
         date: todayStr,
         calories: 0,
         protein: 0,
-        water: 0
+        water: 0,
+        steps: 0
       });
     }
   }, []);
@@ -133,10 +137,16 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
         date: getTodayDateString(),
         calories: 0,
         protein: 0,
-        water: 0
+        water: 0,
+        steps: 0
       };
       saveTodayLog(resetLog);
     }
+  };
+
+  const addSteps = (count: number) => {
+    const nextLog = { ...todayLog, steps: todayLog.steps + count };
+    saveTodayLog(nextLog);
   };
 
   if (!profile) return null;
@@ -391,6 +401,27 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
               </span>
             </motion.div>
 
+            {/* Steps Card */}
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -2 }}
+              className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-colors hover:bg-neutral-900/60 relative overflow-hidden group col-span-2 sm:col-span-4"
+            >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-green-500" />
+              <Footprints className="h-4 w-4 text-green-500 mx-auto mb-1 group-hover:scale-110 transition shrink-0" />
+              <motion.span 
+                key={profile.steps}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                id="target-steps" 
+                className="font-bebas text-2xl text-green-500 block"
+              >
+                {profile.steps.toLocaleString()}
+              </motion.span>
+              <span className="font-condensed text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
+                DAILY STEPS TARGET
+              </span>
+            </motion.div>
+
           </motion.div>
         </div>
 
@@ -460,10 +491,49 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
               </div>
             </div>
 
+            {/* Steps Tracker Bar */}
+            <div>
+              <div className="flex justify-between items-end text-xs mb-1.5">
+                <span className="font-condensed font-extrabold tracking-wider text-neutral-400">STEPS TRACKER</span>
+                <span className="font-mono text-xs">
+                  <span className="text-green-500 font-bold">{todayLog.steps.toLocaleString()}</span> / {profile.steps.toLocaleString()}
+                </span>
+              </div>
+              <div className="h-2.5 bg-neutral-900 border border-dark-border rounded-full overflow-hidden">
+                <div 
+                  className="bg-green-500 h-full rounded-full transition-all duration-305"
+                  style={{ width: `${Math.min(100, (todayLog.steps / profile.steps) * 100)}%` }}
+                />
+              </div>
+            </div>
+
           </div>
 
           {/* Quick Logging Adders */}
           <div className="mt-5 pt-4 border-t border-dark-border/40 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            {/* Steps Quick Loggers */}
+            <div className="sm:col-span-2">
+              <span className="text-[10px] font-condensed tracking-wider font-extrabold text-neutral-400 block mb-2 uppercase">
+                LOG STEPS
+              </span>
+              <div className="flex gap-1.5">
+                {[
+                  { label: "+1K Steps", val: 1000 },
+                  { label: "+2K Steps", val: 2000 },
+                  { label: "+5K Steps", val: 5000 }
+                ].map((item, idx) => (
+                  <button
+                    key={idx}
+                    id={`quick-steps-${item.val}`}
+                    onClick={() => addSteps(item.val)}
+                    className="flex-1 min-h-[44px] py-2 px-1 rounded-lg bg-neutral-950 hover:bg-neutral-900 border border-dark-border text-xs sm:text-[10px] text-neutral-300 font-condensed tracking-wider font-bold transition hover:border-green-500 touch-manipulation"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             
             {/* Water Quick Loggers */}
             <div>

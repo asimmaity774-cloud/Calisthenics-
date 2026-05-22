@@ -1,6 +1,7 @@
 import React from "react";
 import { HistoryLog } from "../types";
-import { Award, Zap, Calendar, Trash2, Clock, CheckCircle } from "lucide-react";
+import { Award, Zap, Calendar, Trash2, Clock, CheckCircle, BarChart3 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 interface ProgressHistoryProps {
   logs: HistoryLog[];
@@ -36,8 +37,43 @@ export default function ProgressHistory({ logs, onClearLogs, streak }: ProgressH
   // Group logs by dayNumber keys to see what was checked
   const completedDayNumbers = new Set(logs.map((l) => l.dayNumber));
 
+  // Prepare chart data: Last 7 sessions sorted chronologically by completion time
+  const chartData = [...logs]
+    .sort((a, b) => new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime())
+    .slice(-7)
+    .map((log) => ({
+      name: `D0${log.dayNumber}`,
+      duration: Math.round(log.durationSeconds / 60), // minutes
+      fullDate: formatDate(log.completedAt)
+    }));
+
+  const CustomChartTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-neutral-900 border border-dark-border p-3 rounded-xl min-w-[120px] shadow-2xl">
+          <p className="text-white font-condensed font-bold uppercase text-xs mb-1">
+            {label} 
+          </p>
+          <div className="flex items-center gap-1.5 text-fire font-bebas text-lg">
+            <Clock className="w-3 h-3" />
+            <span>{payload[0].value} MINS</span>
+          </div>
+          {payload[0].payload.fullDate && (
+             <p className="text-[9px] text-neutral-500 font-mono mt-1">
+               {payload[0].payload.fullDate}
+             </p>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div id="progress-history-wrapper" className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div id="progress-history-wrapper" className="space-y-6">
+      
+      {/* 3 COLUMN GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       
       {/* 1. STREAK & SUMMARY PANEL */}
       <div className="bg-dark-card border border-dark-border rounded-xl p-5 flex flex-col justify-between">
@@ -247,6 +283,49 @@ export default function ProgressHistory({ logs, onClearLogs, streak }: ProgressH
           </div>
         )}
       </div>
+
+      </div> {/* Close 3 COLUMN GRID */}
+
+      {/* 4. PERFORMANCE CHART (RECHARTS) */}
+      {logs.length > 0 && (
+        <div className="bg-dark-card border border-dark-border rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-6 border-b border-dark-border pb-3">
+            <BarChart3 className="h-5 w-5 text-accent2" />
+            <h3 className="font-bebas text-xl tracking-wide text-white">
+              INTENSITY TRENDS (LAST 7 SESSIONS)
+            </h3>
+          </div>
+          
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: '#737373', fontSize: 10, fontWeight: 700, fontFamily: 'ui-sans-serif, system-ui, sans-serif' }}
+                  dy={10}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#737373', fontSize: 10, fontFamily: 'ui-monospace, SFMono-Regular, monospace' }}
+                />
+                <Tooltip cursor={{ fill: '#171717' }} content={<CustomChartTooltip />} />
+                <Bar 
+                  dataKey="duration" 
+                  radius={[4, 4, 0, 0]}
+                  animationDuration={1500}
+                >
+                  {chartData.map((entry, index) => (
+                     <Cell key={`cell-${index}`} fill={index === chartData.length - 1 ? '#ef4444' : '#3f3f46'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
     </div>
   );

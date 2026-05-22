@@ -50,6 +50,7 @@ export interface NutritionProfile {
   carbs: number;
   fat: number;
   water: number;
+  steps: number;
 }
 
 export interface DailyIntake {
@@ -57,6 +58,7 @@ export interface DailyIntake {
   calories: number;
   protein: number;
   water: number; // in ml
+  steps: number;
 }
 
 export interface HistoryLog {
