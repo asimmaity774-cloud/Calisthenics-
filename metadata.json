@@ -1,0 +1,6 @@
+{
+  "name": "Extreme Calisthenics Routine",
+  "description": "Interactive 7-Day Warrior Workout Planner, progress tracker, and calisthenics nutrition calculator with custom rest timers, and technique drills.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
