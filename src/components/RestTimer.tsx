@@ -132,18 +132,18 @@ export default function RestTimer({ initialSeconds, exerciseName, setNumber, onC
               setSoundEnabled(!soundEnabled);
               playBeep(600, 0.15);
             }}
-            className="p-1.5 rounded-md hover:bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition touch-manipulation"
             title={soundEnabled ? "Mute audio" : "Unmute audio"}
           >
-            {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-rose-500" />}
+            {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5 text-rose-500" />}
           </button>
           
           <button 
             id="close-rest-timer"
             onClick={onClose}
-            className="p-1.5 rounded-md hover:bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white transition touch-manipulation"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function RestTimer({ initialSeconds, exerciseName, setNumber, onC
         <button 
           id="btn-rest-minus"
           onClick={subtract15s}
-          className="col-span-1 p-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 flex justify-center items-center text-xs text-neutral-300 font-bold transition duration-150"
+          className="col-span-1 min-h-[48px] p-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 flex justify-center items-center text-sm sm:text-xs text-neutral-300 font-bold transition duration-150 touch-manipulation"
           title="-15 Seconds"
         >
           -15s
@@ -177,7 +177,7 @@ export default function RestTimer({ initialSeconds, exerciseName, setNumber, onC
         <button 
           id="btn-rest-toggle"
           onClick={toggleTimer}
-          className={`col-span-3 py-2 px-3 rounded-lg flex items-center justify-center gap-1 text-xs font-bold font-condensed tracking-wider transition duration-150 uppercase ${
+          className={`col-span-3 min-h-[48px] py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 text-sm sm:text-xs font-bold font-condensed tracking-wider transition duration-150 uppercase touch-manipulation ${
             isActive 
               ? "bg-zinc-800 border border-neutral-700 hover:bg-neutral-700 text-white" 
               : "bg-fire hover:bg-fire/90 text-white border border-fire"
@@ -185,11 +185,11 @@ export default function RestTimer({ initialSeconds, exerciseName, setNumber, onC
         >
           {isActive ? (
             <>
-              <Pause className="h-3 w-3 fill-current" /> PAUSE REST
+              <Pause className="h-4 w-4 fill-current relative -top-[1px]" /> PAUSE REST
             </>
           ) : (
             <>
-              <Play className="h-3 w-3 fill-current" /> RESUME REST
+              <Play className="h-4 w-4 fill-current relative -top-[1px]" /> RESUME REST
             </>
           )}
         </button>
@@ -197,25 +197,25 @@ export default function RestTimer({ initialSeconds, exerciseName, setNumber, onC
         <button 
           id="btn-rest-plus"
           onClick={add15s}
-          className="col-span-1 p-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 flex justify-center items-center text-xs text-neutral-300 font-bold transition duration-150"
+          className="col-span-1 min-h-[48px] p-2 rounded-lg bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 flex justify-center items-center text-sm sm:text-xs text-neutral-300 font-bold transition duration-150 touch-manipulation"
           title="+15 Seconds"
         >
           +15s
         </button>
       </div>
 
-      <div className="mt-2.5 flex justify-between gap-2">
+      <div className="mt-3 flex justify-between gap-2">
         <button
           id="btn-rest-restart"
           onClick={restartTimer}
-          className="flex-1 py-1.5 px-2 rounded-md bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 flex items-center justify-center gap-1 text-[10px] font-condensed font-bold tracking-widest uppercase transition text-neutral-400 hover:text-white"
+          className="flex-1 min-h-[44px] py-2 px-3 rounded-lg bg-neutral-900 hover:bg-neutral-850 border border-neutral-800 flex items-center justify-center gap-1.5 text-xs sm:text-[10px] font-condensed font-bold tracking-widest uppercase transition text-neutral-400 hover:text-white touch-manipulation"
         >
-          <RotateCcw className="h-2.5 w-2.5" /> RESTART
+          <RotateCcw className="h-3.5 w-3.5" /> RESTART
         </button>
         <button
           id="btn-rest-skip"
           onClick={onClose}
-          className="flex-1 py-1.5 px-2 rounded-md bg-fire/15 hover:bg-fire/25 border border-fire/30 hover:border-fire/50 flex items-center justify-center text-[10px] font-condensed font-bold tracking-widest uppercase transition text-fire"
+          className="flex-1 min-h-[44px] py-2 px-3 rounded-lg bg-fire/15 hover:bg-fire/25 border border-fire/30 hover:border-fire/50 flex items-center justify-center text-xs sm:text-[10px] font-condensed font-bold tracking-widest uppercase transition text-fire touch-manipulation"
         >
           SKIP REST →
         </button>

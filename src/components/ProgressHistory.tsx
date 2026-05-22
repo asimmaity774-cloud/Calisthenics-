@@ -191,10 +191,10 @@ export default function ProgressHistory({ logs, onClearLogs, streak }: ProgressH
               <button
                 id="btn-clear-history"
                 onClick={onClearLogs}
-                className="text-neutral-500 hover:text-rose-500 transition p-1 rounded hover:bg-neutral-900"
+                className="min-w-[44px] min-h-[44px] flex items-center justify-center text-neutral-500 hover:text-rose-500 transition rounded-lg hover:bg-neutral-900 touch-manipulation"
                 title="Wipe workout logs"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-5 w-5" />
               </button>
             )}
           </div>

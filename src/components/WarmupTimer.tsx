@@ -153,16 +153,16 @@ export default function WarmupTimer({ onComplete, onClose }: WarmupTimerProps) {
                 setSoundEnabled(!soundEnabled);
                 playBeep(500, 0.1);
               }}
-              className="p-1.5 rounded-lg border border-dark-border bg-neutral-900 text-neutral-400 hover:text-white"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg border border-dark-border bg-neutral-900 text-neutral-400 hover:text-white touch-manipulation"
             >
-              {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4 text-rose-500" />}
+              {soundEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5 text-rose-500" />}
             </button>
             <button
               id="warmup-close"
               onClick={onClose}
-              className="p-1.5 rounded-lg border border-dark-border bg-neutral-900 text-neutral-400 hover:text-white"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg border border-dark-border bg-neutral-900 text-neutral-400 hover:text-white touch-manipulation"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
           </div>
         </div>
@@ -223,32 +223,32 @@ export default function WarmupTimer({ onComplete, onClose }: WarmupTimerProps) {
         </div>
 
         {/* Action Controls */}
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3 mt-4">
           <button
             id="warmup-btn-reset"
             onClick={resetWarmup}
-            className="px-4 py-3 rounded-lg border border-dark-border bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition flex items-center justify-center gap-1.5"
+            className="min-h-[52px] min-w-[52px] sm:px-4 sm:py-3 rounded-lg border border-dark-border bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition flex items-center justify-center touch-manipulation"
             title="Restart from beginning"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="h-5 w-5 sm:h-4 sm:w-4" />
           </button>
 
           <button
             id="warmup-btn-play-pause"
             onClick={() => setIsPlaying(!isPlaying)}
-            className={`flex-1 py-3 rounded-lg flex items-center justify-center gap-1.5 font-condensed font-extrabold tracking-widest text-sm transition uppercase border ${
+            className={`flex-1 min-h-[52px] py-3 rounded-lg flex items-center justify-center gap-2 font-condensed font-extrabold tracking-widest text-base sm:text-sm transition uppercase border touch-manipulation ${
               isPlaying 
                 ? "bg-neutral-800 border-neutral-700 hover:bg-neutral-700 text-white" 
-                : "bg-fire border-fire hover:bg-fire/85 text-white"
+                : "bg-fire border-fire hover:bg-fire/85 text-white shadow-lg shadow-fire/20"
             }`}
           >
             {isPlaying ? (
               <>
-                <Pause className="h-4 w-4 fill-current animate-pulse" /> PAUSE WARMUP
+                <Pause className="h-5 w-5 sm:h-4 sm:w-4 fill-current animate-pulse" /> PAUSE
               </>
             ) : (
               <>
-                <Play className="h-4 w-4 fill-current" /> START DYNAMIC WARM-UP
+                <Play className="h-5 w-5 sm:h-4 sm:w-4 fill-current" /> START
               </>
             )}
           </button>
@@ -256,20 +256,20 @@ export default function WarmupTimer({ onComplete, onClose }: WarmupTimerProps) {
           <button
             id="warmup-btn-skip"
             onClick={skipStep}
-            className="px-4 py-3 rounded-lg border border-dark-border bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition font-condensed text-xs font-bold tracking-wider"
+            className="min-h-[52px] px-4 py-3 sm:px-4 sm:py-3 rounded-lg border border-dark-border bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition font-condensed text-sm sm:text-xs font-bold tracking-wider touch-manipulation"
           >
             {activeStepIndex === WARMUP_STEPS.length - 1 ? "FINISH" : "SKIP"}
           </button>
         </div>
 
         {/* Bottom manual bypass */}
-        <div className="mt-4 text-center">
+        <div className="mt-5 text-center">
           <button
             id="warmup-btn-instant-complete"
             onClick={onComplete}
-            className="text-[10px] font-condensed tracking-widest text-neutral-500 hover:text-fire transition uppercase font-semibold"
+            className="min-h-[44px] px-4 text-[11px] sm:text-[10px] font-condensed tracking-widest text-neutral-500 hover:text-fire transition uppercase font-semibold touch-manipulation"
           >
-            Bypassing timed warm-up & mark completed
+            BYPASS TIMED WARM-UP & MARK COMPLETED
           </button>
         </div>
       </div>

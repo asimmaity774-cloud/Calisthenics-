@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { NutritionProfile, DailyIntake } from "../types";
 import { Scale, Target, Droplet, Flame, Sparkles, Plus, RotateCcw, Drumstick, RefreshCw } from "lucide-react";
 
@@ -172,7 +173,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                   max="200"
                   value={weight}
                   onChange={(e) => setWeight(Math.max(1, Number(e.target.value)))}
-                  className="flex-1 bg-neutral-900 border border-dark-border rounded-lg py-2 px-3 text-sm text-white focus:outline-none focus:border-gold tracking-wide"
+                  className="flex-1 min-h-[48px] bg-neutral-900 border border-dark-border rounded-lg py-3 px-4 sm:py-2 sm:px-3 text-base sm:text-sm text-white focus:outline-none focus:border-gold tracking-wide"
                 />
                 <button
                   id="toggle-unit"
@@ -186,7 +187,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                       setWeight(Math.round(weight / 2.20462));
                     }
                   }}
-                  className="px-3 rounded-lg bg-neutral-950 border border-dark-border hover:bg-neutral-800 text-xs font-bold text-neutral-300 uppercase transition"
+                  className="min-h-[48px] px-4 sm:px-3 rounded-lg bg-neutral-950 border border-dark-border hover:bg-neutral-800 text-sm sm:text-xs font-bold text-neutral-300 uppercase transition touch-manipulation"
                 >
                   {weightUnit === "kg" ? "KG → LBS" : "LBS → KG"}
                 </button>
@@ -205,7 +206,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                 max="250"
                 value={height}
                 onChange={(e) => setHeight(Math.max(1, Number(e.target.value)))}
-                className="w-full bg-neutral-900 border border-dark-border rounded-lg py-2 px-3 text-sm text-white focus:outline-none focus:border-gold tracking-wide"
+                className="w-full min-h-[48px] bg-neutral-900 border border-dark-border rounded-lg py-3 px-4 sm:py-2 sm:px-3 text-base sm:text-sm text-white focus:outline-none focus:border-gold tracking-wide"
               />
             </div>
 
@@ -225,7 +226,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                     id={`btn-goal-${g.key}`}
                     type="button"
                     onClick={() => setGoal(g.key as any)}
-                    className={`p-2 rounded-lg border text-center transition flex flex-col justify-center items-center ${
+                    className={`min-h-[56px] sm:min-h-[48px] p-2 rounded-lg border text-center transition flex flex-col justify-center items-center touch-manipulation ${
                       goal === g.key
                         ? "bg-gold/15 border-gold text-gold"
                         : "bg-neutral-950 border-dark-border hover:bg-neutral-900 text-neutral-400"
@@ -248,7 +249,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                   id="btn-activity-active"
                   type="button"
                   onClick={() => setActivityLevel("active")}
-                  className={`p-2 rounded-lg border text-left transition ${
+                  className={`min-h-[56px] sm:min-h-[48px] p-3 sm:p-2 rounded-lg border text-left transition touch-manipulation ${
                     activityLevel === "active"
                       ? "bg-accent2/15 border-accent2 text-accent2"
                       : "bg-neutral-950 border-dark-border hover:bg-neutral-900 text-neutral-400"
@@ -261,7 +262,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                   id="btn-activity-extreme"
                   type="button"
                   onClick={() => setActivityLevel("extreme")}
-                  className={`p-2 rounded-lg border text-left transition ${
+                  className={`min-h-[56px] sm:min-h-[48px] p-3 sm:p-2 rounded-lg border text-left transition touch-manipulation ${
                     activityLevel === "extreme"
                       ? "bg-fire/15 border-fire text-fire"
                       : "bg-neutral-950 border-dark-border hover:bg-neutral-900 text-neutral-400"
@@ -298,57 +299,99 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
             </span>
           </div>
 
-          <div id="nutrition-grid-panel" className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+            id="nutrition-grid-panel" 
+            className="grid grid-cols-2 sm:grid-cols-4 gap-3 relative z-10"
+          >
             
             {/* Calories Card */}
-            <div className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-all hover:bg-neutral-900/60 relative overflow-hidden group">
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -2 }}
+              className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-colors hover:bg-neutral-900/60 relative overflow-hidden group"
+            >
               <div className="absolute top-0 left-0 right-0 h-1 bg-fire" />
               <Flame className="h-4 w-4 text-fire mx-auto mb-1 group-hover:scale-110 transition shrink-0" />
-              <span id="target-calories" className="font-bebas text-2xl text-white block">
+              <motion.span 
+                key={profile.calories}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                id="target-calories" 
+                className="font-bebas text-2xl text-white block"
+              >
                 {profile.calories}
-              </span>
+              </motion.span>
               <span className="font-condensed text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
                 TARGET KCAL
               </span>
-            </div>
+            </motion.div>
 
             {/* Protein Card */}
-            <div className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-all hover:bg-neutral-900/60 relative overflow-hidden group">
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -2 }}
+              className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-colors hover:bg-neutral-900/60 relative overflow-hidden group"
+            >
               <div className="absolute top-0 left-0 right-0 h-1 bg-gold" />
               <Drumstick className="h-4 w-4 text-gold mx-auto mb-1 group-hover:scale-110 transition shrink-0" />
-              <span id="target-protein" className="font-bebas text-2xl text-gold block">
+              <motion.span 
+                key={profile.protein}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                id="target-protein" 
+                className="font-bebas text-2xl text-gold block"
+              >
                 {profile.protein}g
-              </span>
+              </motion.span>
               <span className="font-condensed text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
                 PROTEIN (2.2g/kg)
               </span>
-            </div>
+            </motion.div>
 
             {/* Carbs Card */}
-            <div className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-all hover:bg-neutral-900/60 relative overflow-hidden group">
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -2 }}
+              className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-colors hover:bg-neutral-900/60 relative overflow-hidden group"
+            >
               <div className="absolute top-0 left-0 right-0 h-1 bg-accent2" />
               <Sparkles className="h-4 w-4 text-accent2 mx-auto mb-1 group-hover:scale-110 transition shrink-0" />
-              <span id="target-carbs" className="font-bebas text-2xl text-accent2 block">
+              <motion.span 
+                key={profile.carbs}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                id="target-carbs" 
+                className="font-bebas text-2xl text-accent2 block"
+              >
                 {profile.carbs}g
-              </span>
+              </motion.span>
               <span className="font-condensed text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
                 CARB ENERGY
               </span>
-            </div>
+            </motion.div>
 
             {/* Water Card */}
-            <div className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-all hover:bg-neutral-900/60 relative overflow-hidden group">
+            <motion.div 
+              whileHover={{ scale: 1.05, y: -2 }}
+              className="bg-dark-card border border-dark-border rounded-lg p-3 text-center transition-colors hover:bg-neutral-900/60 relative overflow-hidden group"
+            >
               <div className="absolute top-0 left-0 right-0 h-1 bg-sky-500" />
               <Droplet className="h-4 w-4 text-sky-500 mx-auto mb-1 group-hover:scale-110 transition shrink-0" />
-              <span id="target-water" className="font-bebas text-2xl text-sky-500 block">
+              <motion.span 
+                key={profile.water}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                id="target-water" 
+                className="font-bebas text-2xl text-sky-500 block"
+              >
                 {(profile.water / 1000).toFixed(1)}L
-              </span>
+              </motion.span>
               <span className="font-condensed text-[10px] font-bold tracking-wider text-neutral-400 uppercase">
                 FLUID BALANCE
               </span>
-            </div>
+            </motion.div>
 
-          </div>
+          </motion.div>
         </div>
 
         {/* 3. INTERACTIVE INTAKE TRACKER FOR REALTIME WARRIORS */}
@@ -360,10 +403,10 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
             <button
               id="logger-reset"
               onClick={resetTracker}
-              className="text-neutral-500 hover:text-rose-500 text-[10px] font-condensed tracking-widest uppercase transition flex items-center gap-1"
+              className="min-h-[44px] px-3 sm:px-2 text-neutral-500 hover:text-rose-500 text-xs sm:text-[10px] font-condensed tracking-widest uppercase transition flex items-center justify-center gap-1.5 touch-manipulation hover:bg-neutral-900 rounded-lg"
               title="Reset today metrics"
             >
-              <RotateCcw className="h-3 w-3" /> RESET FOR TODAY
+              <RotateCcw className="h-4 w-4 sm:h-3 sm:w-3" /> RESET
             </button>
           </div>
 
@@ -437,7 +480,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                     key={idx}
                     id={`quick-water-${item.val}`}
                     onClick={() => addWater(item.val)}
-                    className="flex-1 py-1 px-1 rounded bg-neutral-950 hover:bg-neutral-900 border border-dark-border text-[10px] text-neutral-300 font-condensed tracking-wider font-bold transition hover:border-sky-500"
+                    className="flex-1 min-h-[44px] py-2 px-1 rounded-lg bg-neutral-950 hover:bg-neutral-900 border border-dark-border text-xs sm:text-[10px] text-neutral-300 font-condensed tracking-wider font-bold transition hover:border-sky-500 touch-manipulation"
                   >
                     {item.label}
                   </button>
@@ -459,7 +502,7 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
                     key={idx}
                     id={`quick-food-${idx}`}
                     onClick={() => addMeal(item.p, item.c)}
-                    className="flex-1 py-1 px-1 rounded bg-neutral-950 hover:bg-neutral-900 border border-dark-border text-[10px] text-neutral-300 font-condensed tracking-wider font-bold transition hover:border-gold"
+                    className="flex-1 min-h-[44px] py-2 px-1 rounded-lg bg-neutral-950 hover:bg-neutral-900 border border-dark-border text-xs sm:text-[10px] text-neutral-300 font-condensed tracking-wider font-bold transition hover:border-gold touch-manipulation"
                   >
                     {item.label}
                   </button>

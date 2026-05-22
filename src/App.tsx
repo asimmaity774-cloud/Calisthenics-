@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { WEEKLY_PLAN, WARRIOR_RULES } from "./data";
 import { WorkoutDay, WorkoutProgress, HistoryLog, Exercise } from "./types";
 import RestTimer from "./components/RestTimer";
@@ -404,21 +405,60 @@ export default function App() {
       <div className="max-w-6xl mx-auto space-y-8 relative">
         
         {/* 1. HERO BRAND HEADER SPLASH */}
-        <header className="text-center pt-8 pb-4 relative">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-14 bg-gradient-to-bottom from-transparent to-fire" />
+        <motion.header 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center pt-24 pb-16 relative rounded-3xl overflow-hidden border border-dark-border/40 shadow-2xl"
+        >
+          {/* Animated Background Image */}
+          <motion.img 
+            initial={{ scale: 1.1, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.35 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            src="https://picsum.photos/seed/calisthenics/1920/1080?grayscale=1"
+            alt="Workout background"
+            referrerPolicy="no-referrer"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+          <div className="absolute inset-0 z-0 bg-gradient-to-t from-dark-bg via-dark-bg/60 to-dark-bg/20" />
           
-          <span className="font-condensed text-[11px] font-extrabold tracking-[0.35em] text-fire uppercase block mt-16 mb-2">
-            ZERO EQUIPMENT · ABSOLUTE LEVERAGE · METICULOUS CONSISTENCY
-          </span>
-          
-          <h1 className="font-bebas text-6xl md:text-8xl leading-none tracking-tight text-white mb-2 selection:text-stone-900">
-            EXTREME <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-fire to-gold">CALISTHENICS</span>
-          </h1>
-          
-          <p className="font-condensed text-md md:text-lg font-bold tracking-[0.3em] text-neutral-400 uppercase mt-2">
-            7 — Day Warrior Bodyweight Plan
-          </p>
-        </header>
+          <div className="relative z-10 px-4">
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "3.5rem", opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-0.5 bg-gradient-to-bottom from-transparent to-fire" 
+            />
+            
+            <motion.span 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="font-condensed text-[11px] font-extrabold tracking-[0.35em] text-fire uppercase block mt-6 mb-2 drop-shadow-md"
+            >
+              ZERO EQUIPMENT · ABSOLUTE LEVERAGE · METICULOUS CONSISTENCY
+            </motion.span>
+            
+            <motion.h1 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.7, type: "spring", stiffness: 100 }}
+              className="font-bebas text-6xl md:text-8xl leading-none tracking-tight text-white mb-2 selection:text-stone-900 drop-shadow-lg"
+            >
+              EXTREME <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-fire to-gold drop-shadow-none">CALISTHENICS</span>
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="font-condensed text-md md:text-lg font-bold tracking-[0.3em] text-neutral-300 uppercase mt-2 drop-shadow-md"
+            >
+              7 — Day Warrior Bodyweight Plan
+            </motion.p>
+          </div>
+        </motion.header>
 
         {/* COMPREHENSIVE SUB HEADER DIVIDER */}
         <div className="flex items-center gap-4 py-2">
@@ -453,7 +493,7 @@ export default function App() {
               <button
                 id="btn-warmup-timer"
                 onClick={() => setShowWarmupTimer(true)}
-                className="py-2.5 px-4 rounded-lg bg-neutral-900 hover:bg-neutral-850 border border-dark-border text-xs text-white font-condensed font-extrabold tracking-wider uppercase transition flex items-center gap-1.5"
+                className="min-h-[48px] py-3 px-4 sm:py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-850 border border-dark-border text-sm sm:text-xs text-white font-condensed font-extrabold tracking-wider uppercase transition flex items-center gap-1.5 touch-manipulation"
               >
                 <Clock className="h-3.5 w-3.5 text-fire" /> 2M ROTATIONS
               </button>
@@ -461,7 +501,7 @@ export default function App() {
               <button
                 id="btn-warmup-run-toggle"
                 onClick={handleToggleWarmup}
-                className={`flex-1 sm:flex-none py-2.5 px-4 rounded-lg font-condensed font-extrabold tracking-wider text-xs transition uppercase flex items-center justify-center gap-1.5 border ${
+                className={`flex-1 sm:flex-none min-h-[48px] py-3 px-4 sm:py-2.5 rounded-lg font-condensed font-extrabold tracking-wider text-sm sm:text-xs transition uppercase flex items-center justify-center gap-1.5 border touch-manipulation ${
                   activeProgress.warmupCompleted
                     ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
                     : "bg-fire border-fire hover:bg-fire/85 text-white"
@@ -501,7 +541,7 @@ export default function App() {
                     key={lvl.key}
                     id={`btn-diff-${lvl.key}`}
                     onClick={() => handleChangeDifficulty(lvl.key as any)}
-                    className={`py-2 px-1 rounded-lg text-center transition flex flex-col justify-center items-center border uppercase text-[10px] font-condensed font-extrabold tracking-widest ${
+                    className={`min-h-[52px] py-3 px-2 sm:py-2 sm:px-1 rounded-lg text-center transition flex flex-col justify-center items-center border uppercase text-xs sm:text-[10px] font-condensed font-extrabold tracking-widest touch-manipulation ${
                       isActive
                         ? lvl.key === "recruit"
                           ? "bg-blue-500/10 border-blue-500/40 text-blue-300"
@@ -554,16 +594,37 @@ export default function App() {
               };
 
               return (
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -4 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 * day.number, duration: 0.4 }}
                   key={day.id}
                   id={`btn-day-card-${day.number}`}
                   onClick={() => handleSelectDay(day.id)}
-                  className={`relative text-left rounded-xl border p-4 transition duration-200 overflow-hidden group flex flex-col justify-between h-32 ${getCardBorderClass(day.badgeType)}`}
+                  className={`relative text-left rounded-xl border p-4 transition-colors duration-200 overflow-hidden group flex flex-col justify-between h-32 ${getCardBorderClass(day.badgeType)}`}
                 >
                   {/* Accent Header Line */}
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${getAccentHeaderBar(day.badgeType)}`} />
 
-                  <div>
+                  {/* Add an animated subtle image inside the active card for extra polish */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.img 
+                        initial={{ opacity: 0, scale: 1.2 }}
+                        animate={{ opacity: 0.15, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1 }}
+                        src={`https://picsum.photos/seed/workout-${day.number}/400/300?grayscale=1`}
+                        alt="Workout detail"
+                        referrerPolicy="no-referrer"
+                        className="absolute inset-0 w-full h-full object-cover z-0 mix-blend-overlay pointer-events-none"
+                      />
+                    )}
+                  </AnimatePresence>
+
+                  <div className="relative z-10">
                     <div className="flex justify-between items-center mb-1">
                       <span className="font-mono text-[9px] font-bold text-stone-500">
                         DAY 0{day.number}
@@ -577,7 +638,7 @@ export default function App() {
                     </h3>
                   </div>
 
-                  <div className="mt-3">
+                  <div className="mt-3 relative z-10">
                     <span className="text-[10px] font-mono text-stone-400 uppercase tracking-tight block">
                       {day.category}
                     </span>
@@ -592,7 +653,7 @@ export default function App() {
                       </span>
                     </div>
                   </div>
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -641,7 +702,7 @@ export default function App() {
               <button
                 id="btn-active-reset"
                 onClick={handleResetCurrentProgress}
-                className="py-2.5 px-3 rounded-lg border border-dark-border/60 hover:border-rose-500 hover:bg-neutral-900 bg-neutral-950 text-[10px] text-neutral-400 hover:text-rose-500 font-condensed font-bold uppercase tracking-wider transition duration-150"
+                className="min-w-[44px] min-h-[44px] py-3 px-4 sm:py-2.5 sm:px-3 rounded-lg border border-dark-border/60 hover:border-rose-500 hover:bg-neutral-900 bg-neutral-950 text-xs sm:text-[10px] text-neutral-400 hover:text-rose-500 font-condensed font-bold uppercase tracking-wider transition duration-150 touch-manipulation"
                 title="Wipe checklists for this day"
               >
                 CLEAR REPS
@@ -668,12 +729,28 @@ export default function App() {
                 {currentDay.exercises.map((ex, index) => {
                   const isChecked = activeProgress.exerciseSetsCompleted[ex.name]?.[0];
                   return (
-                    <div 
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover="hover"
+                      transition={{ delay: 0.1 * index, duration: 0.3 }}
                       key={index}
                       id={`rest-drill-${index}`}
-                      className="flex items-center justify-between p-3.5 bg-neutral-950 border border-dark-border rounded-lg"
+                      className="group relative overflow-hidden flex items-center justify-between p-3.5 bg-neutral-950 border border-dark-border rounded-lg"
                     >
-                      <div>
+                      {/* 🖼️ Hover Image Reveal */}
+                      <motion.img 
+                        variants={{
+                          hover: { opacity: 0.15, scale: 1.05 }
+                        }}
+                        initial={{ opacity: 0, scale: 1 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        src={`https://picsum.photos/seed/${ex.name.replace(/\s+/g, '')}recovery/800/150?grayscale=1`}
+                        alt="recovery drill background"
+                        referrerPolicy="no-referrer"
+                        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
+                      />
+                      <div className="relative z-10">
                         <h4 className="font-condensed font-bold text-sm text-stone-200">
                           {ex.name}
                         </h4>
@@ -684,7 +761,7 @@ export default function App() {
                       <button
                         id={`btn-check-rest-${index}`}
                         onClick={() => handleToggleSet(ex.name, 0)}
-                        className={`h-7 px-3 rounded border text-[10px] font-condensed font-extrabold uppercase tracking-widest transition duration-150 flex items-center justify-center ${
+                        className={`min-h-[44px] h-11 sm:h-7 px-4 sm:px-3 rounded-lg sm:rounded border text-xs sm:text-[10px] font-condensed font-extrabold uppercase tracking-widest transition duration-150 flex items-center justify-center touch-manipulation relative z-10 ${
                           isChecked
                             ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-400"
                             : "bg-neutral-900 border-neutral-800 text-neutral-400 hover:text-white"
@@ -692,7 +769,7 @@ export default function App() {
                       >
                         {isChecked ? "COMPLETED" : "MARK DONE"}
                       </button>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -701,7 +778,7 @@ export default function App() {
                 <button
                   id="btn-declare-rest-completed"
                   onClick={handleSaveWorkoutCompletion}
-                  className="py-3 px-8 rounded-lg bg-emerald-500 border border-emerald-500 hover:bg-emerald-400 text-stone-950 font-condensed font-extrabold tracking-widest uppercase transition flex items-center gap-1.5"
+                  className="min-h-[52px] py-4 sm:py-3 px-8 rounded-lg bg-emerald-500 border border-emerald-500 hover:bg-emerald-400 text-stone-950 font-condensed font-extrabold tracking-widest text-base sm:text-sm uppercase transition flex items-center gap-1.5 touch-manipulation"
                 >
                   <CheckCircle className="h-4 w-4" /> SECURE RECOVERY DAY
                 </button>
@@ -725,15 +802,32 @@ export default function App() {
                     const isAllDone = progressSets.every(Boolean);
 
                     return (
-                      <div 
+                      <motion.div 
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        whileHover="hover"
+                        transition={{ delay: 0.1 * idx, duration: 0.4 }}
                         key={idx}
                         id={`exercise-card-row-${idx}`}
-                        className={`bg-neutral-950/80 border rounded-xl p-4 transition duration-150 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
-                          isAllDone ? "border-emerald-500/20 bg-emerald-500/5" : "border-dark-border"
+                        className={`group relative overflow-hidden bg-neutral-950/80 border rounded-xl p-4 transition-colors duration-150 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                          isAllDone ? "border-emerald-500/20 bg-emerald-500/50" : "border-dark-border"
                         }`}
                       >
+                        {/* 🖼️ Hover Image Reveal */}
+                        <motion.img 
+                          variants={{
+                            hover: { opacity: 0.15, scale: 1.05 }
+                          }}
+                          initial={{ opacity: 0, scale: 1 }}
+                          transition={{ duration: 0.4, ease: "easeOut" }}
+                          src={`https://picsum.photos/seed/${ex.name.replace(/\s+/g, '')}calisthenics/800/200?grayscale=1`}
+                          alt="exercise background"
+                          referrerPolicy="no-referrer"
+                          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
+                        />
+                        
                         {/* Muscle/Move Info info */}
-                        <div className="flex-1">
+                        <div className="flex-1 relative z-10">
                           <div className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded bg-neutral-900 border border-dark-border text-[10px] font-bold text-neutral-400 flex items-center justify-center font-mono">
                               0{idx+1}
@@ -755,7 +849,7 @@ export default function App() {
                         </div>
 
                         {/* Interactive set boxes clicking */}
-                        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto self-stretch md:self-center justify-start md:justify-end">
+                        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto self-stretch md:self-center justify-start md:justify-end relative z-10">
                           <span className="text-[10px] font-condensed text-neutral-500 font-extrabold tracking-widest uppercase md:mr-1">
                             CHECK COMPLETED SETS:
                           </span>
@@ -766,9 +860,9 @@ export default function App() {
                                 key={setIdx}
                                 id={`btn-check-set-${idx}-${setIdx}`}
                                 onClick={() => handleToggleSet(ex.name, setIdx, false)}
-                                className={`w-8 h-8 rounded-lg border font-mono text-xs font-bold transition flex items-center justify-center ${
+                                className={`w-11 h-11 sm:w-8 sm:h-8 rounded-lg border font-mono text-sm sm:text-xs font-bold transition flex items-center justify-center touch-manipulation ${
                                   done
-                                    ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+                                    ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
                                     : "bg-neutral-900 border-neutral-800 hover:border-neutral-500 text-stone-400"
                                 }`}
                                 title={`Mark set ${setIdx + 1} finalized`}
@@ -779,7 +873,7 @@ export default function App() {
                           </div>
                         </div>
 
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -798,14 +892,31 @@ export default function App() {
                       const isAllDone = progressSets.every(Boolean);
 
                       return (
-                        <div 
+                        <motion.div 
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          whileHover="hover"
+                          transition={{ delay: 0.1 * idx, duration: 0.4 }}
                           key={idx}
                           id={`core-card-row-${idx}`}
-                          className={`bg-neutral-950/80 border rounded-xl p-4 transition flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                          className={`group relative overflow-hidden bg-neutral-950/80 border rounded-xl p-4 transition flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
                             isAllDone ? "border-emerald-500/20 bg-emerald-500/50" : "border-dark-border"
                           }`}
                         >
-                          <div className="flex-1">
+                          {/* 🖼️ Hover Image Reveal */}
+                          <motion.img 
+                            variants={{
+                              hover: { opacity: 0.15, scale: 1.05 }
+                            }}
+                            initial={{ opacity: 0, scale: 1 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            src={`https://picsum.photos/seed/${ex.name.replace(/\s+/g, '')}core/800/200?grayscale=1`}
+                            alt="core exercise background"
+                            referrerPolicy="no-referrer"
+                            className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
+                          />
+                          
+                          <div className="flex-1 relative z-10">
                             <h4 className="font-bebas text-xl text-stone-200 tracking-wide">
                               {ex.name}
                             </h4>
@@ -816,15 +927,15 @@ export default function App() {
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 relative z-10">
                             {progressSets.map((done, setIdx) => (
                               <button
                                 key={setIdx}
                                 id={`btn-check-core-${idx}-${setIdx}`}
                                 onClick={() => handleToggleSet(ex.name, setIdx, true)}
-                                className={`w-8 h-8 rounded-lg border font-mono text-xs font-bold transition flex items-center justify-center ${
+                                className={`w-11 h-11 sm:w-8 sm:h-8 rounded-lg border font-mono text-sm sm:text-xs font-bold transition flex items-center justify-center touch-manipulation ${
                                   done
-                                    ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+                                    ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
                                     : "bg-neutral-900 border-neutral-850 hover:border-neutral-700 text-stone-400"
                                 }`}
                                 title={`Mark core set ${setIdx + 1} finalized`}
@@ -833,7 +944,7 @@ export default function App() {
                               </button>
                             ))}
                           </div>
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </div>
@@ -842,20 +953,45 @@ export default function App() {
 
               {/* Day 6 Brutal Circuits notes display */}
               {currentDay.circuitRounds && (
-                <div className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4 }}
+                  className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl"
+                >
                   <span className="font-bebas text-lg text-orange-400 block tracking-wider">
                     ⚡ CIRCUIT MODE ACTIVE: {currentDay.circuitRounds}
                   </span>
                   <p className="text-xs text-neutral-300 mt-1 leading-relaxed">
                     Perform this as an intense sequential cycle. Run 1 set of each exercise consecutively. Rest exactly 45 to 60 seconds at the end of every complete round. Complete 8 full rounds total for a true biochemical full body metabolic overhaul! Touch each block sets button to register round progression.
                   </p>
-                </div>
+                </motion.div>
               )}
 
               {/* Finisher Block interactive section */}
               {currentDay.finisher && (
-                <div className="bg-gradient-to-r from-fire/10 to-transparent border border-fire/20 rounded-xl p-5">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <motion.div 
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover="hover"
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                  className="group relative overflow-hidden bg-gradient-to-r from-fire/10 to-transparent border border-fire/20 rounded-xl p-5"
+                >
+                  {/* 🖼️ Hover Image Reveal */}
+                  <motion.img 
+                    variants={{
+                      hover: { opacity: 0.2, scale: 1.05 }
+                    }}
+                    initial={{ opacity: 0, scale: 1 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    src={`https://picsum.photos/seed/burnout/800/200?grayscale=1`}
+                    alt="finisher burnout background"
+                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
+                  />
+                  
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
                     <div>
                       <span className="font-condensed text-[10px] font-bold tracking-widest text-fire uppercase block">
                         HIGH FATIGUE BURNOUT PHASE
@@ -871,7 +1007,7 @@ export default function App() {
                     <button
                       id="btn-finisher-complete"
                       onClick={handleToggleFinisher}
-                      className={`w-full sm:w-auto py-3 px-5 rounded-lg font-condensed font-extrabold tracking-widest text-xs transition uppercase ${
+                      className={`min-h-[48px] w-full sm:w-auto py-3 px-5 rounded-lg font-condensed font-extrabold tracking-widest text-sm sm:text-xs transition uppercase touch-manipulation ${
                         activeProgress.finisherCompleted
                           ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
                           : "bg-gradient-to-r from-fire to-orange-500 hover:from-fire/90 border border-fire text-stone-950 uppercase"
@@ -880,7 +1016,7 @@ export default function App() {
                       {activeProgress.finisherCompleted ? "FINISHER COMPLETED" : "MARK FINISHER DONE"}
                     </button>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* Complete workout button sheet */}
@@ -892,7 +1028,7 @@ export default function App() {
                 <button
                   id="btn-complete-workout"
                   onClick={handleSaveWorkoutCompletion}
-                  className="w-full sm:w-auto py-3.5 px-8 rounded-lg bg-emerald-400 hover:bg-emerald-350 border border-emerald-400 font-condensed font-extrabold tracking-widest text-sm text-stone-950 uppercase shadow-lg shadow-emerald-400/10 hover:shadow-emerald-400/20 transition flex items-center justify-center gap-2"
+                  className="min-h-[52px] w-full sm:w-auto py-4 sm:py-3.5 px-8 rounded-lg bg-emerald-400 hover:bg-emerald-350 border border-emerald-400 font-condensed font-extrabold tracking-widest text-base sm:text-sm text-stone-950 uppercase shadow-lg shadow-emerald-400/10 hover:shadow-emerald-400/20 transition flex items-center justify-center gap-2 touch-manipulation"
                 >
                   <Trophy className="h-4.5 w-4.5 fill-current" /> SECURE COMBAT DEFEATED
                 </button>
@@ -921,7 +1057,7 @@ export default function App() {
                   key={tab.id}
                   id={`btn-tab-${tab.id}`}
                   onClick={() => setActiveBentoTab(tab.id as any)}
-                  className={`py-3 px-4 rounded-t-lg font-condensed font-extrabold tracking-wider text-xs transition duration-150 flex items-center gap-2 whitespace-nowrap uppercase ${
+                  className={`min-h-[52px] py-4 px-5 sm:py-3 sm:px-4 rounded-t-lg font-condensed font-extrabold tracking-wider text-sm sm:text-xs transition duration-150 flex items-center gap-2 whitespace-nowrap uppercase touch-manipulation ${
                     isActive
                       ? "text-white border-b-2 border-fire bg-neutral-900"
                       : "hover:text-stone-200 hover:bg-neutral-950"
