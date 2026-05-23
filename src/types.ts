@@ -5,6 +5,7 @@ export interface Exercise {
   sets: string;
   setsCount: number;
   repsText: string;
+  video_url?: string;
 }
 
 export interface Finisher {

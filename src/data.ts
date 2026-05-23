@@ -9,15 +9,15 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badge: "V-TAPER PRIME",
     badgeType: "fire",
     exercises: [
-      { name: "Wall Handstand Push-ups", sets: "5 × MAX", setsCount: 5, repsText: "MAX" },
-      { name: "Pike Push-ups", sets: "5 × 15", setsCount: 5, repsText: "15" },
-      { name: "Wide Push-ups", sets: "4 × 20", setsCount: 4, repsText: "20" },
-      { name: "Archer Push-ups", sets: "4 × 8 ea", setsCount: 4, repsText: "8 ea" },
-      { name: "Decline Push-ups", sets: "4 × 15", setsCount: 4, repsText: "15" },
-      { name: "Shoulder Taps (plank)", sets: "4 × 20 ea", setsCount: 4, repsText: "20 ea" }
+      { name: "Wall Handstand Push-ups", sets: "5 × MAX", setsCount: 5, repsText: "MAX", video_url: "https://example.com/video/wall_handstand_push_ups" },
+      { name: "Pike Push-ups", sets: "5 × 15", setsCount: 5, repsText: "15", video_url: "https://example.com/video/pike_push_ups" },
+      { name: "Wide Push-ups", sets: "4 × 20", setsCount: 4, repsText: "20", video_url: "https://example.com/video/wide_push_ups" },
+      { name: "Archer Push-ups", sets: "4 × 8 ea", setsCount: 4, repsText: "8 ea", video_url: "https://example.com/video/archer_push_ups" },
+      { name: "Decline Push-ups", sets: "4 × 15", setsCount: 4, repsText: "15", video_url: "https://example.com/video/decline_push_ups" },
+      { name: "Shoulder Taps (plank)", sets: "4 × 20 ea", setsCount: 4, repsText: "20 ea", video_url: "https://example.com/video/shoulder_taps_plank" }
     ],
     core: [
-      { name: "Dragon Flags", sets: "4 × 6", setsCount: 4, repsText: "6" }
+      { name: "Dragon Flags", sets: "4 × 6", setsCount: 4, repsText: "6", video_url: "https://example.com/video/dragon_flags" }
     ],
     finisher: {
       label: "Finisher",
@@ -33,15 +33,15 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badge: "BACK SIM",
     badgeType: "blue",
     exercises: [
-      { name: "Superman Hold", sets: "5 × 45s", setsCount: 5, repsText: "45s" },
-      { name: "Superman Pulses", sets: "4 × 25", setsCount: 4, repsText: "25" },
-      { name: "Reverse Snow Angels", sets: "4 × 20", setsCount: 4, repsText: "20" },
-      { name: "Floor YTW (each pos)", sets: "4 × 12", setsCount: 4, repsText: "12" },
-      { name: "Back Extensions", sets: "4 × 20", setsCount: 4, repsText: "20" },
-      { name: "Prone Cobra Hold", sets: "3 × 40s", setsCount: 3, repsText: "40s" }
+      { name: "Superman Hold", sets: "5 × 45s", setsCount: 5, repsText: "45s", video_url: "https://example.com/video/superman_hold" },
+      { name: "Superman Pulses", sets: "4 × 25", setsCount: 4, repsText: "25", video_url: "https://example.com/video/superman_pulses" },
+      { name: "Reverse Snow Angels", sets: "4 × 20", setsCount: 4, repsText: "20", video_url: "https://example.com/video/reverse_snow_angels" },
+      { name: "Floor YTW (each pos)", sets: "4 × 12", setsCount: 4, repsText: "12", video_url: "https://example.com/video/floor_ytw_each_pos" },
+      { name: "Back Extensions", sets: "4 × 20", setsCount: 4, repsText: "20", video_url: "https://example.com/video/back_extensions" },
+      { name: "Prone Cobra Hold", sets: "3 × 40s", setsCount: 3, repsText: "40s", video_url: "https://example.com/video/prone_cobra_hold" }
     ],
     core: [
-      { name: "Hollow Body Hold", sets: "4 × 35s", setsCount: 4, repsText: "35s" }
+      { name: "Hollow Body Hold", sets: "4 × 35s", setsCount: 4, repsText: "35s", video_url: "https://example.com/video/hollow_body_hold" }
     ],
     finisher: {
       label: "Finisher",
@@ -58,15 +58,15 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badge: "EXPLOSIVE",
     badgeType: "fire",
     exercises: [
-      { name: "Pistol Squat Progression", sets: "5 × MAX ea", setsCount: 5, repsText: "MAX ea" },
-      { name: "Jump Squats", sets: "5 × 20", setsCount: 5, repsText: "20" },
-      { name: "Lunge Jumps", sets: "4 × 12 ea", setsCount: 4, repsText: "12 ea" },
-      { name: "Single Leg Glute Bridge", sets: "4 × 20 ea", setsCount: 4, repsText: "20 ea" },
-      { name: "Wall Sit", sets: "3 × 90s", setsCount: 3, repsText: "90s" },
-      { name: "Single Leg Calf Raises", sets: "5 × 30 ea", setsCount: 5, repsText: "30 ea" }
+      { name: "Pistol Squat Progression", sets: "5 × MAX ea", setsCount: 5, repsText: "MAX ea", video_url: "https://example.com/video/pistol_squat_progression" },
+      { name: "Jump Squats", sets: "5 × 20", setsCount: 5, repsText: "20", video_url: "https://example.com/video/jump_squats" },
+      { name: "Lunge Jumps", sets: "4 × 12 ea", setsCount: 4, repsText: "12 ea", video_url: "https://example.com/video/lunge_jumps" },
+      { name: "Single Leg Glute Bridge", sets: "4 × 20 ea", setsCount: 4, repsText: "20 ea", video_url: "https://example.com/video/single_leg_glute_bridge" },
+      { name: "Wall Sit", sets: "3 × 90s", setsCount: 3, repsText: "90s", video_url: "https://example.com/video/wall_sit" },
+      { name: "Single Leg Calf Raises", sets: "5 × 30 ea", setsCount: 5, repsText: "30 ea", video_url: "https://example.com/video/single_leg_calf_raises" }
     ],
     core: [
-      { name: "L-Sit Hold (floor)", sets: "4 × 20s", setsCount: 4, repsText: "20s" }
+      { name: "L-Sit Hold (floor)", sets: "4 × 20s", setsCount: 4, repsText: "20s", video_url: "https://example.com/video/l_sit_hold_floor" }
     ],
     finisher: {
       label: "Finisher",
@@ -82,15 +82,15 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badge: "EXPLOSIVE",
     badgeType: "gold",
     exercises: [
-      { name: "Clap Push-ups", sets: "5 × 10", setsCount: 5, repsText: "10" },
-      { name: "Pseudo Planche Push-ups", sets: "5 × 8", setsCount: 5, repsText: "8" },
-      { name: "Diamond Push-ups", sets: "4 × 15", setsCount: 4, repsText: "15" },
-      { name: "Decline Clap Push-ups", sets: "4 × 8", setsCount: 4, repsText: "8" },
-      { name: "Tricep Push-ups", sets: "4 × 15", setsCount: 4, repsText: "15" },
-      { name: "Push-up Bottom Hold", sets: "3 × 30s", setsCount: 3, repsText: "30s" }
+      { name: "Clap Push-ups", sets: "5 × 10", setsCount: 5, repsText: "10", video_url: "https://example.com/video/clap_push_ups" },
+      { name: "Pseudo Planche Push-ups", sets: "5 × 8", setsCount: 5, repsText: "8", video_url: "https://example.com/video/pseudo_planche_push_ups" },
+      { name: "Diamond Push-ups", sets: "4 × 15", setsCount: 4, repsText: "15", video_url: "https://example.com/video/diamond_push_ups" },
+      { name: "Decline Clap Push-ups", sets: "4 × 8", setsCount: 4, repsText: "8", video_url: "https://example.com/video/decline_clap_push_ups" },
+      { name: "Tricep Push-ups", sets: "4 × 15", setsCount: 4, repsText: "15", video_url: "https://example.com/video/tricep_push_ups" },
+      { name: "Push-up Bottom Hold", sets: "3 × 30s", setsCount: 3, repsText: "30s", video_url: "https://example.com/video/push_up_bottom_hold" }
     ],
     core: [
-      { name: "Dragon Flag Negatives", sets: "4 × 6", setsCount: 4, repsText: "6 Negatives" }
+      { name: "Dragon Flag Negatives", sets: "4 × 6", setsCount: 4, repsText: "6 Negatives", video_url: "https://example.com/video/dragon_flag_negatives" }
     ],
     finisher: {
       label: "Burnout",
@@ -106,15 +106,15 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badge: "IRON CORE",
     badgeType: "blue",
     exercises: [
-      { name: "Superman Circuit", sets: "5 × (20 reps + 30s hold)", setsCount: 5, repsText: "20r + 30s" },
-      { name: "Floor YTW Series", sets: "4 × 15 ea", setsCount: 4, repsText: "15 ea" },
-      { name: "Reverse Snow Angels", sets: "4 × 20", setsCount: 4, repsText: "20" },
-      { name: "Single Leg Hip Thrust", sets: "4 × 15 ea", setsCount: 4, repsText: "15 ea" },
-      { name: "Prone Cobra to Superman", sets: "4 × 12", setsCount: 4, repsText: "12" }
+      { name: "Superman Circuit", sets: "5 × (20 reps + 30s hold)", setsCount: 5, repsText: "20r + 30s", video_url: "https://example.com/video/superman_circuit" },
+      { name: "Floor YTW Series", sets: "4 × 15 ea", setsCount: 4, repsText: "15 ea", video_url: "https://example.com/video/floor_ytw_series" },
+      { name: "Reverse Snow Angels", sets: "4 × 20", setsCount: 4, repsText: "20", video_url: "https://example.com/video/reverse_snow_angels" },
+      { name: "Single Leg Hip Thrust", sets: "4 × 15 ea", setsCount: 4, repsText: "15 ea", video_url: "https://example.com/video/single_leg_hip_thrust" },
+      { name: "Prone Cobra to Superman", sets: "4 × 12", setsCount: 4, repsText: "12", video_url: "https://example.com/video/prone_cobra_to_superman" }
     ],
     core: [
-      { name: "Dragon Flags", sets: "4 × 8", setsCount: 4, repsText: "8" },
-      { name: "L-Sit Hold (floor)", sets: "4 × 25s", setsCount: 4, repsText: "25s" }
+      { name: "Dragon Flags", sets: "4 × 8", setsCount: 4, repsText: "8", video_url: "https://example.com/video/dragon_flags" },
+      { name: "L-Sit Hold (floor)", sets: "4 × 25s", setsCount: 4, repsText: "25s", video_url: "https://example.com/video/l_sit_hold_floor" }
     ],
     finisher: {
       label: "Finisher",
@@ -132,14 +132,14 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badgeType: "fire",
     circuitRounds: "8 Rounds · 45–60 sec rest only",
     exercises: [
-      { name: "Wall Handstand Push-ups", sets: "8 × 10 (1/round)", setsCount: 8, repsText: "10" },
-      { name: "Jump Squats", sets: "8 × 20 (1/round)", setsCount: 8, repsText: "20" },
-      { name: "Clap Push-ups", sets: "8 × 10 (1/round)", setsCount: 8, repsText: "10" },
-      { name: "Superman Pulses", sets: "8 × 20 (1/round)", setsCount: 8, repsText: "20" },
-      { name: "Lunge Jumps", sets: "8 × 12 ea (1/round)", setsCount: 8, repsText: "12 ea" },
-      { name: "Diamond Push-ups", sets: "8 × 15 (1/round)", setsCount: 8, repsText: "15" },
-      { name: "Floor L-Sit Hold", sets: "8 × 15s (1/round)", setsCount: 8, repsText: "15s" },
-      { name: "Bicycle Crunches", sets: "8 × 30 (1/round)", setsCount: 8, repsText: "30" }
+      { name: "Wall Handstand Push-ups", sets: "8 × 10 (1/round)", setsCount: 8, repsText: "10", video_url: "https://example.com/video/wall_handstand_push_ups" },
+      { name: "Jump Squats", sets: "8 × 20 (1/round)", setsCount: 8, repsText: "20", video_url: "https://example.com/video/jump_squats" },
+      { name: "Clap Push-ups", sets: "8 × 10 (1/round)", setsCount: 8, repsText: "10", video_url: "https://example.com/video/clap_push_ups" },
+      { name: "Superman Pulses", sets: "8 × 20 (1/round)", setsCount: 8, repsText: "20", video_url: "https://example.com/video/superman_pulses" },
+      { name: "Lunge Jumps", sets: "8 × 12 ea (1/round)", setsCount: 8, repsText: "12 ea", video_url: "https://example.com/video/lunge_jumps" },
+      { name: "Diamond Push-ups", sets: "8 × 15 (1/round)", setsCount: 8, repsText: "15", video_url: "https://example.com/video/diamond_push_ups" },
+      { name: "Floor L-Sit Hold", sets: "8 × 15s (1/round)", setsCount: 8, repsText: "15s", video_url: "https://example.com/video/floor_l_sit_hold" },
+      { name: "Bicycle Crunches", sets: "8 × 30 (1/round)", setsCount: 8, repsText: "30", video_url: "https://example.com/video/bicycle_crunches" }
     ],
     finisher: {
       label: "Final Spark",
@@ -155,13 +155,13 @@ export const WEEKLY_PLAN: WorkoutDay[] = [
     badge: "RECOVERY",
     badgeType: "rest",
     exercises: [
-      { name: "Foam Rolling & Full Body Stretching", sets: "1 × 15 mins", setsCount: 1, repsText: "15m" },
-      { name: "Deep Squat Hold (cumulative)", sets: "1 × 5 mins", setsCount: 1, repsText: "5m" },
-      { name: "Cobra Stretch & Child's Pose", sets: "3 × 60s holding", setsCount: 3, repsText: "60s" },
-      { name: "Mobility Flow (hip circles, shoulder flossing)", sets: "1 × 10 mins", setsCount: 1, repsText: "10m" }
+      { name: "Foam Rolling & Full Body Stretching", sets: "1 × 15 mins", setsCount: 1, repsText: "15m", video_url: "https://example.com/video/foam_rolling_full_body_stretching" },
+      { name: "Deep Squat Hold (cumulative)", sets: "1 × 5 mins", setsCount: 1, repsText: "5m", video_url: "https://example.com/video/deep_squat_hold_cumulative" },
+      { name: "Cobra Stretch & Child's Pose", sets: "3 × 60s holding", setsCount: 3, repsText: "60s", video_url: "https://example.com/video/cobra_stretch_child_s_pose" },
+      { name: "Mobility Flow (hip circles, shoulder flossing)", sets: "1 × 10 mins", setsCount: 1, repsText: "10m", video_url: "https://example.com/video/mobility_flow_hip_circles_shoulder_flossing" }
     ],
     core: [
-      { name: "Standard Plank Hold", sets: "3 × 60s Work", setsCount: 3, repsText: "60s" }
+      { name: "Standard Plank Hold", sets: "3 × 60s Work", setsCount: 3, repsText: "60s", video_url: "https://example.com/video/standard_plank_hold" }
     ],
     finisher: {
       label: "Active Walk",

@@ -37,12 +37,12 @@ import {
   Bot,
   Share2,
   ListTodo,
-  User
+  User,
+  PlayCircle
 } from "lucide-react";
 
 export default function App() {
   // --- STATES & MOUNT SETUP ---
-  const [showSplash, setShowSplash] = useState(true);
   const [activeDayId, setActiveDayId] = useState<string>("day-1");
   const [difficulty, setDifficulty] = useState<"recruit" | "warrior" | "beast">("warrior");
   const [historyLogs, setHistoryLogs] = useState<HistoryLog[]>([]);
@@ -437,9 +437,6 @@ export default function App() {
 
   return (
     <div id="main-calisthenics-app" className="min-h-screen bg-dark-bg text-stone-100 font-sans p-4 md:p-8 selection:bg-fire selection:text-white relative">
-      <AnimatePresence>
-        {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-      </AnimatePresence>
       <SyncStatusIndicator />
       <div className="absolute top-4 right-4 z-50">
         <LoginButton />
@@ -521,19 +518,6 @@ export default function App() {
           <div className="absolute inset-0 z-0 bg-gradient-to-t from-dark-bg via-dark-bg/60 to-dark-bg/20" />
           
           <div className="relative z-10 px-4 flex flex-col items-center">
-            
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
-              animate={{ scale: 1, opacity: 1, rotate: 0 }}
-              transition={{ delay: 0.2, duration: 0.8, type: "spring" }}
-              className="w-24 h-24 md:w-32 md:h-32 mb-6 rounded-full overflow-hidden shadow-[0_0_30px_rgba(220,38,38,0.3)] border border-red-500/20"
-            >
-               <img 
-                 src="https://storage.googleapis.com/mweb-prod-us-central1/5n7t92o2mdf0x26onx3x826p4/0c00de51-789a-41f2-be66-8fde03a891fa" 
-                 alt="App Logo" 
-                 className="w-full h-full object-cover mix-blend-screen"
-               />
-            </motion.div>
             
             <motion.span 
               initial={{ opacity: 0 }}
@@ -890,11 +874,18 @@ export default function App() {
                         referrerPolicy="no-referrer"
                         className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
                       />
-                      <div className="relative z-10">
-                        <h4 className="font-condensed font-bold text-sm text-stone-200">
-                          {ex.name}
-                        </h4>
-                        <span className="text-[10px] font-condensed text-neutral-500 font-semibold uppercase tracking-wider block mt-1">
+                      <div className="relative z-10 flex flex-col items-start gap-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-condensed font-bold text-sm text-stone-200">
+                            {ex.name}
+                          </h4>
+                          {ex.video_url && (
+                            <a href={ex.video_url} target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 transition-colors" title="View video demonstration">
+                              <PlayCircle className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                        <span className="text-[10px] font-condensed text-neutral-500 font-semibold uppercase tracking-wider block">
                           Duration target: {ex.sets}
                         </span>
                       </div>
@@ -975,6 +966,11 @@ export default function App() {
                             <h4 className="font-bebas text-xl text-stone-100 tracking-wide">
                               {ex.name}
                             </h4>
+                            {ex.video_url && (
+                              <a href={ex.video_url} target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 transition-colors ml-1" title="View video demonstration">
+                                <PlayCircle className="w-5 h-5" />
+                              </a>
+                            )}
                           </div>
                           
                           <div className="flex items-center gap-2.5 mt-1.5 font-condensed">
@@ -1057,9 +1053,16 @@ export default function App() {
                           />
                           
                           <div className="flex-1 relative z-10">
-                            <h4 className="font-bebas text-xl text-stone-200 tracking-wide">
-                              {ex.name}
-                            </h4>
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bebas text-xl text-stone-200 tracking-wide">
+                                {ex.name}
+                              </h4>
+                              {ex.video_url && (
+                                <a href={ex.video_url} target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 transition-colors ml-1" title="View video demonstration">
+                                  <PlayCircle className="w-5 h-5" />
+                                </a>
+                              )}
+                            </div>
                             <div className="flex items-center gap-2 mt-1 font-condensed">
                               <span className="text-xs text-neutral-400">Target config: <strong className="text-white font-medium">{ex.sets}</strong></span>
                               <span className="text-neutral-600">•</span>
