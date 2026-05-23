@@ -4,7 +4,12 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: '.env.local' });
+
+if (!process.env.GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY is not set. Add it to .env.local");
+  process.exit(1);
+}
 
 const app = express();
 const PORT = 3000;
@@ -115,7 +120,7 @@ app.post("/api/chat", async (req, res) => {
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: contents,
       config: {
         systemInstruction,
