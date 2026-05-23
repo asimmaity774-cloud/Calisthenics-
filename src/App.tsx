@@ -239,6 +239,16 @@ export default function App() {
     updateProgress(activeDayId, { ...prog });
   };
 
+  // Update personal note for an exercise
+  const handleUpdateNote = (exerciseName: string, note: string) => {
+    const prog = getOrInitDayProgress(activeDayId);
+    if (!prog.exerciseNotes) {
+      prog.exerciseNotes = {};
+    }
+    prog.exerciseNotes[exerciseName] = note;
+    updateProgress(activeDayId, { ...prog });
+  };
+
   // Manual Check warm up or pre-workout run
   const handleToggleWarmup = () => {
     const prog = getOrInitDayProgress(activeDayId);
@@ -940,7 +950,7 @@ export default function App() {
                         transition={{ delay: 0.1 * idx, duration: 0.4 }}
                         key={idx}
                         id={`exercise-card-row-${idx}`}
-                        className={`group relative overflow-hidden bg-neutral-950/80 border rounded-xl p-4 transition-colors duration-150 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                        className={`group relative overflow-hidden bg-neutral-950/80 border rounded-xl p-4 transition-colors duration-150 flex flex-col gap-4 ${
                           isAllDone ? "border-emerald-500/20 bg-emerald-500/50" : "border-dark-border"
                         }`}
                       >
@@ -957,8 +967,9 @@ export default function App() {
                           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
                         />
                         
-                        {/* Muscle/Move Info info */}
-                        <div className="flex-1 relative z-10">
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full">
+                          {/* Muscle/Move Info info */}
+                          <div className="flex-1 relative z-10">
                           <div className="flex items-center gap-2">
                             <span className="w-5 h-5 rounded bg-neutral-900 border border-dark-border text-[10px] font-bold text-neutral-400 flex items-center justify-center font-mono">
                               0{idx+1}
@@ -1008,6 +1019,17 @@ export default function App() {
                             ))}
                           </div>
                         </div>
+                        </div>
+
+                        <div className="relative z-10 w-full">
+                          <input
+                            type="text"
+                            placeholder="Add personal note (e.g., +10kg vest, smooth reps...)"
+                            value={activeProgress.exerciseNotes?.[ex.name] || ""}
+                            onChange={(e) => handleUpdateNote(ex.name, e.target.value)}
+                            className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-neutral-300 focus:outline-none focus:border-neutral-600 transition placeholder-neutral-600"
+                          />
+                        </div>
 
                       </motion.div>
                     );
@@ -1035,7 +1057,7 @@ export default function App() {
                           transition={{ delay: 0.1 * idx, duration: 0.4 }}
                           key={idx}
                           id={`core-card-row-${idx}`}
-                          className={`group relative overflow-hidden bg-neutral-950/80 border rounded-xl p-4 transition flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                          className={`group relative overflow-hidden bg-neutral-950/80 border rounded-xl p-4 transition flex flex-col gap-4 ${
                             isAllDone ? "border-emerald-500/20 bg-emerald-500/50" : "border-dark-border"
                           }`}
                         >
@@ -1052,7 +1074,8 @@ export default function App() {
                             className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none mix-blend-overlay"
                           />
                           
-                          <div className="flex-1 relative z-10">
+                          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 w-full">
+                            <div className="flex-1 relative z-10">
                             <div className="flex items-center gap-2">
                               <h4 className="font-bebas text-xl text-stone-200 tracking-wide">
                                 {ex.name}
@@ -1086,6 +1109,17 @@ export default function App() {
                                 {done ? <Check className="h-3.5 w-3.5" /> : setIdx + 1}
                               </button>
                             ))}
+                          </div>
+                          </div>
+
+                          <div className="relative z-10 w-full">
+                            <input
+                              type="text"
+                              placeholder="Add personal note (e.g., +10kg vest, smooth reps...)"
+                              value={activeProgress.exerciseNotes?.[ex.name] || ""}
+                              onChange={(e) => handleUpdateNote(ex.name, e.target.value)}
+                              className="w-full bg-neutral-900/50 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-neutral-300 focus:outline-none focus:border-neutral-600 transition placeholder-neutral-600"
+                            />
                           </div>
                         </motion.div>
                       );

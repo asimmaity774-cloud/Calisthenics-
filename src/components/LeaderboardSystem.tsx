@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Trophy, Medal, Crown, Star, Users, Globe, ChevronUp, ChevronDown, Activity, Flame } from "lucide-react";
+import { Trophy, Medal, Crown, Star, Users, Globe, ChevronUp, ChevronDown, Activity, Flame, Award } from "lucide-react";
 import { Storage } from "../lib/storage";
+import { TrophyCase } from "./TrophyCase";
+import { AnimatePresence } from "motion/react";
 
 interface LeaderboardUser {
   id: string;
@@ -56,6 +58,7 @@ const getTierColor = (tier: string) => {
 export function LeaderboardSystem() {
   const [activeTab, setActiveTab] = useState<"global" | "friends">("global");
   const [filterPeriod, setFilterPeriod] = useState<"all" | "monthly" | "weekly">("all");
+  const [showTrophies, setShowTrophies] = useState(false);
   const [myUser, setMyUser] = useState<Omit<LeaderboardUser, "tier">>({
     id: "me", name: "You", points: 0, workouts: 0, habits: 0, streak: 0, isMe: true
   });
@@ -196,18 +199,27 @@ export function LeaderboardSystem() {
             </div>
           </div>
           
-          <div className="flex gap-2">
-            {["all", "monthly", "weekly"].map((period) => (
-              <button
-                key={period}
-                onClick={() => setFilterPeriod(period as any)}
-                className={`px-3 py-1.5 rounded font-condensed font-bold text-[10px] uppercase tracking-widest border transition-colors ${
-                   filterPeriod === period ? "bg-gold/20 border-gold/40 text-gold" : "bg-neutral-900 border-dark-border text-neutral-500 hover:text-white"
-                }`}
-              >
-                {period}
-              </button>
-            ))}
+          <div className="flex gap-2 flex-col sm:flex-row mt-4 sm:mt-0 items-end sm:items-center">
+            <button
+              onClick={() => setShowTrophies(true)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded font-condensed font-bold text-[10px] uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+            >
+              <Award className="w-3.5 h-3.5" />
+              Trophy Case
+            </button>
+            <div className="flex gap-2">
+              {["all", "monthly", "weekly"].map((period) => (
+                <button
+                  key={period}
+                  onClick={() => setFilterPeriod(period as any)}
+                  className={`px-3 py-1.5 rounded font-condensed font-bold text-[10px] uppercase tracking-widest border transition-colors ${
+                     filterPeriod === period ? "bg-gold/20 border-gold/40 text-gold" : "bg-neutral-900 border-dark-border text-neutral-500 hover:text-white"
+                  }`}
+                >
+                  {period}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -283,6 +295,14 @@ export function LeaderboardSystem() {
         </div>
       </div>
       
+      <AnimatePresence>
+        {showTrophies && (
+          <TrophyCase 
+            onClose={() => setShowTrophies(false)} 
+            myStats={myUser} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

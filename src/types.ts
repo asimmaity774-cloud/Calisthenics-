@@ -34,6 +34,7 @@ export interface WorkoutProgress {
   warmupCompleted: boolean;
   exerciseSetsCompleted: { [exerciseName: string]: boolean[] }; // map exercise.name -> boolean array for each set
   coreSetsCompleted: { [exerciseName: string]: boolean[] };
+  exerciseNotes?: { [exerciseName: string]: string };
   finisherCompleted: boolean;
   isFullyCompleted: boolean;
   completedAt?: string;

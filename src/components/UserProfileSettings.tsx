@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { User, Activity, AlertCircle, Save, Stethoscope, ChevronRight, Award, Shield, Flame, Star, Zap, Crown, Check } from "lucide-react";
 import { Storage } from "../lib/storage";
 import { TECHNIQUE_DRILLS } from "../data";
+import { WeightTracker } from "./WeightTracker";
 
 const INJURY_ZONES = [
   "Neck", "Shoulders", "Elbows", "Wrists",
@@ -64,6 +65,8 @@ export function UserProfileSettings() {
 
   return (
     <div className="space-y-6">
+      <WeightTracker />
+      
       <div className="flex flex-col md:flex-row gap-6">
         
         <div className="flex-1 bg-neutral-950/60 border border-dark-border rounded-xl p-5">
