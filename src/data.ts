@@ -255,5 +255,76 @@ export const TECHNIQUE_DRILLS: TechniqueDrill[] = [
       "Lean forward: Keep hands beside mid-thigh, not behind hips, to engage abs fully."
     ],
     tips: "If your hips are low, focus on pushing the floor down harder. Scapular depression strength is key!"
+  },
+  {
+    id: "shoulder-dislocates",
+    name: "Band Shoulder Dislocates",
+    difficulty: "Beginner",
+    targetMuscle: "Shoulders, Neck",
+    description: "Crucial mobility drill for healthy, bulletproof shoulders and avoiding impingement. Opens up the chest and stretches the anterior deltoids.",
+    regressionSteps: [
+      "Use a lighter band",
+      "Use a wider grip",
+      "Broomstick pass-throughs"
+    ],
+    keyCues: [
+      "Keep arms completely straight.",
+      "Maintain tension on the band.",
+      "Do not overarch the lower back."
+    ],
+    tips: "Essential recovery drill if you flagged Shoulders or Neck injuries."
+  },
+  {
+    id: "wrist-extensions",
+    name: "Knuckle-to-Palm Wrist Extensions",
+    difficulty: "Beginner",
+    targetMuscle: "Wrists, Elbows",
+    description: "Essential for building robust wrist joints and forearms that can handle heavy calisthenics loads like handstands and planches.",
+    regressionSteps: [
+      "Perform standing against a wall",
+      "Perform on knees with less weight leaning forward"
+    ],
+    keyCues: [
+      "Keep elbows locked out.",
+      "Slow and controlled motion.",
+      "Spread fingers wide."
+    ],
+    tips: "Highly recommended for active Wrist or Elbow injuries/sensitivity."
+  },
+  {
+    id: "jefferson-curl",
+    name: "Light Jefferson Curls",
+    difficulty: "Intermediate",
+    targetMuscle: "Lower Back, Hips",
+    description: "A spinal articulation drill that builds strength and mobility through the entire posterior chain.",
+    regressionSteps: [
+      "Unweighted spinal waves",
+      "Cat-Cow stretches",
+      "BCA (Basic Core Activation)"
+    ],
+    keyCues: [
+      "Tuck chin to chest first.",
+      "Roll down one vertebra at a time.",
+      "Keep knees locked."
+    ],
+    tips: "Perfect rehab for Lower Back or Hips tightness, provided acute pain has subsided."
+  },
+  {
+    id: "atg-split-squat",
+    name: "ATG Split Squat",
+    difficulty: "Intermediate",
+    targetMuscle: "Knees, Ankles",
+    description: "Builds bulletproof knees by taking the joint through a full range of motion under load, strengthening the VMO and connective tissue.",
+    regressionSteps: [
+      "Front foot elevated on a high box",
+      "Assisted with rings/TRX",
+      "Reduced range of motion"
+    ],
+    keyCues: [
+      "Hamstring must completely cover the calf.",
+      "Keep back leg as straight as possible.",
+      "Maintain upright torso."
+    ],
+    tips: "The ultimate recovery tool for Knee or Ankle issues. Start assisted if currently flagged."
   }
 ];

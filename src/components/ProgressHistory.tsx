@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { HistoryLog } from "../types";
-import { Award, Zap, Calendar, Trash2, Clock, CheckCircle, BarChart3 } from "lucide-react";
+import { Award, Zap, Calendar, Trash2, Clock, CheckCircle, BarChart3, Share2, Download } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { toPng } from "html-to-image";
 
 interface ProgressHistoryProps {
   logs: HistoryLog[];
@@ -10,7 +11,41 @@ interface ProgressHistoryProps {
 }
 
 export default function ProgressHistory({ logs, onClearLogs, streak }: ProgressHistoryProps) {
-  
+  const summaryRef = useRef<HTMLDivElement>(null);
+  const [isSharing, setIsSharing] = useState(false);
+
+  const handleShareSummary = async () => {
+    if (!summaryRef.current) return;
+    try {
+      setIsSharing(true);
+      const dataUrl = await toPng(summaryRef.current, { 
+        cacheBust: true, 
+        backgroundColor: '#0a0a0a',
+        style: { transform: 'scale(1)', transformOrigin: 'top left' }
+      });
+      
+      const file = new File([await (await fetch(dataUrl)).blob()], 'workout-summary.png', { type: 'image/png' });
+      
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: 'My Warrior Streak',
+          text: `Check out my workout streak currently at ${streak} days!`,
+          files: [file],
+        });
+      } else {
+        // Fallback to download
+        const link = document.createElement('a');
+        link.download = 'warrior-streak.png';
+        link.href = dataUrl;
+        link.click();
+      }
+    } catch (err) {
+      console.error('Failed to generate image', err);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   // Format seconds to high fidelity readable string (e.g. 14 mins 30 secs)
   const formatDuration = (totalSec: number) => {
     if (totalSec < 60) return `${totalSec}s`;
@@ -76,71 +111,82 @@ export default function ProgressHistory({ logs, onClearLogs, streak }: ProgressH
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       
       {/* 1. STREAK & SUMMARY PANEL */}
-      <div className="bg-dark-card border border-dark-border rounded-xl p-5 flex flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-4 border-b border-dark-border pb-3">
-            <Zap className="h-5 w-5 text-fire" />
-            <h3 className="font-bebas text-xl tracking-wide text-white">
-              WARRIOR ANALYTICS
-            </h3>
-          </div>
-
-          <div className="space-y-4">
-            
-            {/* Active Streak Count */}
-            <div className="bg-neutral-950 border border-dark-border/60 rounded-lg p-4 text-center relative overflow-hidden">
-              <div className="absolute -right-5 -bottom-5 opacity-5 pointer-events-none">
-                <Zap className="h-24 w-24 text-fire fill-current" />
-              </div>
-              <span id="streak-counter" className="font-bebas text-5xl text-fire font-bold block leading-none">
-                {streak}
-              </span>
-              <span className="font-condensed text-[10px] font-extrabold tracking-widest text-neutral-400 uppercase mt-2 block">
-                CURRENT WARRIOR STREAK (DAYS)
-              </span>
-              <p className="text-[10px] text-neutral-500 mt-1">
-                Train consecutive days without breaking flow!
-              </p>
+      <div className="flex flex-col gap-3">
+        <div ref={summaryRef} className="bg-dark-card border border-dark-border rounded-xl p-5 flex flex-col justify-between flex-1">
+          <div>
+            <div className="flex items-center gap-2 mb-4 border-b border-dark-border pb-3">
+              <Zap className="h-5 w-5 text-fire" />
+              <h3 className="font-bebas text-xl tracking-wide text-white">
+                WARRIOR ANALYTICS
+              </h3>
             </div>
 
-            {/* Overall stats */}
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-neutral-950 border border-dark-border/40 rounded-lg p-3 text-center">
-                <span id="total-workouts" className="font-bebas text-3xl text-white block">
-                  {logs.length}
-                </span>
-                <span className="font-condensed text-[9px] font-bold text-neutral-400 tracking-wider block uppercase">
-                  TOTAL COMPLETED
-                </span>
-              </div>
+            <div className="space-y-4">
               
-              <div className="bg-neutral-950 border border-dark-border/40 rounded-lg p-3 text-center">
-                <span id="program-percentage" className="font-bebas text-3xl text-gold block">
-                  {Math.round((completedDayNumbers.size / 7) * 100)}%
+              {/* Active Streak Count */}
+              <div className="bg-neutral-950 border border-dark-border/60 rounded-lg p-4 text-center relative overflow-hidden">
+                <div className="absolute -right-5 -bottom-5 opacity-5 pointer-events-none">
+                  <Zap className="h-24 w-24 text-fire fill-current" />
+                </div>
+                <span id="streak-counter" className="font-bebas text-5xl text-fire font-bold block leading-none">
+                  {streak}
                 </span>
-                <span className="font-condensed text-[9px] font-bold text-neutral-400 tracking-wider block uppercase">
-                  PLAN COMPLETION
+                <span className="font-condensed text-[10px] font-extrabold tracking-widest text-neutral-400 uppercase mt-2 block">
+                  CURRENT WARRIOR STREAK (DAYS)
                 </span>
+                <p className="text-[10px] text-neutral-500 mt-1">
+                  Train consecutive days without breaking flow!
+                </p>
               </div>
+
+              {/* Overall stats */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-neutral-950 border border-dark-border/40 rounded-lg p-3 text-center">
+                  <span id="total-workouts" className="font-bebas text-3xl text-white block">
+                    {logs.length}
+                  </span>
+                  <span className="font-condensed text-[9px] font-bold text-neutral-400 tracking-wider block uppercase">
+                    TOTAL COMPLETED
+                  </span>
+                </div>
+                
+                <div className="bg-neutral-950 border border-dark-border/40 rounded-lg p-3 text-center">
+                  <span id="program-percentage" className="font-bebas text-3xl text-gold block">
+                    {Math.round((completedDayNumbers.size / 7) * 100)}%
+                  </span>
+                  <span className="font-condensed text-[9px] font-bold text-neutral-400 tracking-wider block uppercase">
+                    PLAN COMPLETION
+                  </span>
+                </div>
+              </div>
+
             </div>
-
           </div>
+
+          {/* Dynamic Motivation advice based on consistency */}
+          <div className="mt-6 p-3 bg-neutral-950/60 border border-dark-border/40 rounded-lg">
+            <span className="text-gold font-condensed text-[10px] uppercase font-bold tracking-wider block mb-1">
+              WARRIOR MEDAL METRIC
+            </span>
+            <p className="text-[11px] text-neutral-400 leading-normal">
+              {streak === 0 
+                ? "Stand up. Prepare your running shoes. Day 1 is waiting." 
+                : streak < 3 
+                  ? "Initiation complete. Tendons are swelling. Maintain standard posture!" 
+                  : "Hypertrophy threshold breached! You are executing beast level calisthenics."}
+            </p>
+          </div>
+
         </div>
 
-        {/* Dynamic Motivation advice based on consistency */}
-        <div className="mt-6 p-3 bg-neutral-950/60 border border-dark-border/40 rounded-lg">
-          <span className="text-gold font-condensed text-[10px] uppercase font-bold tracking-wider block mb-1">
-            WARRIOR MEDAL METRIC
-          </span>
-          <p className="text-[11px] text-neutral-400 leading-normal">
-            {streak === 0 
-              ? "Stand up. Prepare your running shoes. Day 1 is waiting." 
-              : streak < 3 
-                ? "Initiation complete. Tendons are swelling. Maintain standard posture!" 
-                : "Hypertrophy threshold breached! You are executing beast level calisthenics."}
-          </p>
-        </div>
-
+        <button 
+          onClick={handleShareSummary}
+          disabled={isSharing}
+          className="w-full py-3.5 bg-neutral-900 border border-dark-border rounded-xl hover:bg-neutral-800 hover:border-emerald-500/50 hover:text-emerald-400 transition-colors flex items-center justify-center gap-2 text-xs font-condensed font-bold tracking-widest uppercase disabled:opacity-50 text-neutral-300 touch-manipulation shadow-lg"
+        >
+          {isSharing ? <Clock className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
+          {isSharing ? "GENERATING..." : "SHARE TO SOCIALS"}
+        </button>
       </div>
 
       {/* 2. PLAN COMPLIANCE CHECKER */}

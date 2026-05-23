@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "Setting": {
+      "title": "Setting",
+      "description": "User generic key-value setting config",
+      "type": "object",
+      "properties": {
+        "value": { "type": "any", "description": "Arbitrary data for this setting" },
+        "updatedAt": { "type": "timestamp" }
+      }
+    },
+    "WorkoutHistory": {
+      "title": "WorkoutHistory",
+      "description": "User recorded workout sessions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "dayNumber": { "type": "number" },
+        "durationSeconds": { "type": "number" },
+        "exercisesCount": { "type": "number" },
+        "streakAtCompletion": { "type": "number" },
+        "badgeType": { "type": "string" },
+        "completedAt": { "type": "timestamp" },
+        "updatedAt": { "type": "timestamp" }
+      }
+    },
+    "CalorieTracking": {
+      "title": "CalorieTracking",
+      "description": "Daily food intake",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "calories": { "type": "number" },
+        "protein": { "type": "number" },
+        "water": { "type": "number" },
+        "steps": { "type": "number" },
+        "updatedAt": { "type": "timestamp" }
+      }
+    },
+    "MealPlan": {
+      "title": "MealPlan",
+      "description": "Daily meal plan structure",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "updatedAt": { "type": "timestamp" }
+      }
+    }
+  },
+  "firestore": {
+    "users/{userId}/settings/{settingId}": {
+      "schema": "#/entities/Setting",
+      "description": "Generic UI settings collection."
+    },
+    "users/{userId}/workout_history/{historyId}": {
+      "schema": "#/entities/WorkoutHistory",
+      "description": "Workout sessions history collection."
+    },
+    "users/{userId}/calorie_tracking/{trackingId}": {
+      "schema": "#/entities/CalorieTracking",
+      "description": "Calorie logging per day."
+    },
+    "users/{userId}/meal_plans/{planId}": {
+      "schema": "#/entities/MealPlan",
+      "description": "Meal plans."
+    }
+  }
+}

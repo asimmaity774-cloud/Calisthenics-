@@ -7,6 +7,14 @@ import WarmupTimer from "./components/WarmupTimer";
 import NutritionCalculator from "./components/NutritionCalculator";
 import TechniqueDrills from "./components/TechniqueDrills";
 import ProgressHistory from "./components/ProgressHistory";
+import { AICoachChat } from "./components/AICoachChat";
+import { UserProfileSettings } from "./components/UserProfileSettings";
+import { HabitTracker } from "./components/HabitTracker";
+import { LeaderboardSystem } from "./components/LeaderboardSystem";
+import { LoginButton } from "./components/LoginButton";
+import { SyncStatusIndicator } from "./components/SyncStatusIndicator";
+import { SplashScreen } from "./components/SplashScreen";
+import { Storage } from "./lib/storage";
 
 // Lucide icon components
 import { 
@@ -25,11 +33,16 @@ import {
   Activity, 
   ChevronDown, 
   Trophy,
-  Coffee
+  Coffee,
+  Bot,
+  Share2,
+  ListTodo,
+  User
 } from "lucide-react";
 
 export default function App() {
   // --- STATES & MOUNT SETUP ---
+  const [showSplash, setShowSplash] = useState(true);
   const [activeDayId, setActiveDayId] = useState<string>("day-1");
   const [difficulty, setDifficulty] = useState<"recruit" | "warrior" | "beast">("warrior");
   const [historyLogs, setHistoryLogs] = useState<HistoryLog[]>([]);
@@ -44,44 +57,63 @@ export default function App() {
   } | null>(null);
   const [showWarmupTimer, setShowWarmupTimer] = useState<boolean>(false);
   const [workoutStartTime, setWorkoutStartTime] = useState<number | null>(null);
-  const [activeBentoTab, setActiveBentoTab] = useState<"nutrition" | "technique" | "rules" | "history">("nutrition");
+  const [activeBentoTab, setActiveBentoTab] = useState<"nutrition" | "technique" | "rules" | "history" | "ai" | "profile" | "habits" | "leaderboard">("leaderboard");
+  const [userWeeklyPlan, setUserWeeklyPlan] = useState<WorkoutDay[]>(WEEKLY_PLAN);
+  const [challengeInfo, setChallengeInfo] = useState<{ dayId: string, time: number | null } | null>(null);
 
   // Timer reference for current workout timer display
   const [liveDuration, setLiveDuration] = useState<number>(0);
 
   // Load state on mount
   useEffect(() => {
-    // 1. History Logs
-    const storedHistory = localStorage.getItem("calisthenics_warrior_history_v1");
-    if (storedHistory) {
-      try {
-        setHistoryLogs(JSON.parse(storedHistory));
-      } catch (e) {
-        console.error("Failed loading history:", e);
+    // 0. Parse Challenge Deep Links
+    const searchParams = new URLSearchParams(window.location.search);
+    const challengeDay = searchParams.get('challengeDay');
+    const challengeTime = searchParams.get('challengeTime');
+    
+    if (challengeDay) {
+      setActiveDayId(challengeDay);
+      setChallengeInfo({ 
+        dayId: challengeDay, 
+        time: challengeTime ? parseInt(challengeTime, 10) : null 
+      });
+      // Optionally clean up URL without fully reloading
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+    // We must load all data async
+    const loadStorage = async () => {
+      // 0. Custom AI Plan
+      const storedPlan = await Storage.getData("calisthenics_weekly_plan_v1");
+      if (storedPlan) {
+        setUserWeeklyPlan(storedPlan);
       }
-    }
-
-    // 2. Day Progress map
-    const storedProgress = localStorage.getItem("calisthenics_progress_v1");
-    if (storedProgress) {
-      try {
-        setDayProgressMap(JSON.parse(storedProgress));
-      } catch (e) {
-        console.error("Failed loading progress:", e);
+      
+      // 1. History Logs
+      const storedHistory = await Storage.getData("calisthenics_warrior_history_v1");
+      if (storedHistory) {
+        setHistoryLogs(storedHistory);
       }
-    }
 
-    // 3. Streak
-    const storedStreak = localStorage.getItem("calisthenics_streak_v1");
-    if (storedStreak) {
-      setStreak(parseInt(storedStreak, 10));
-    }
+      // 2. Day Progress map
+      const storedProgress = await Storage.getData("calisthenics_progress_v1");
+      if (storedProgress) {
+        setDayProgressMap(storedProgress);
+      }
 
-    // 4. Difficulty setting
-    const storedDiff = localStorage.getItem("calisthenics_difficulty_v1");
-    if (storedDiff && (storedDiff === "recruit" || storedDiff === "warrior" || storedDiff === "beast")) {
-      setDifficulty(storedDiff);
-    }
+      // 3. Streak
+      const storedStreak = await Storage.getData("calisthenics_streak_v1");
+      if (storedStreak) {
+        setStreak(parseInt(storedStreak, 10));
+      }
+
+      // 4. Difficulty setting
+      const storedDiff = await Storage.getData("calisthenics_difficulty_v1");
+      if (storedDiff && (storedDiff === "recruit" || storedDiff === "warrior" || storedDiff === "beast")) {
+        setDifficulty(storedDiff);
+      }
+    };
+    
+    loadStorage();
 
     // Set workout start time
     setWorkoutStartTime(Date.now());
@@ -98,7 +130,7 @@ export default function App() {
   }, [workoutStartTime]);
 
   // Retrieve current active day from dataset
-  const currentDay = WEEKLY_PLAN.find((d) => d.id === activeDayId) || WEEKLY_PLAN[0];
+  const currentDay = userWeeklyPlan.find((d) => d.id === activeDayId) || userWeeklyPlan[0];
 
   // Initialize progress state for a day if empty
   const getOrInitDayProgress = (dayId: string): WorkoutProgress => {
@@ -107,7 +139,7 @@ export default function App() {
     }
     
     // Setup clean state structure for the chosen day
-    const targetDay = WEEKLY_PLAN.find((d) => d.id === dayId)!;
+    const targetDay = userWeeklyPlan.find((d) => d.id === dayId)!;
     
     const exerciseSets: { [name: string]: boolean[] } = {};
     targetDay.exercises.forEach((ex) => {
@@ -134,7 +166,7 @@ export default function App() {
   const updateProgress = (dayId: string, item: WorkoutProgress) => {
     const nextMap = { ...dayProgressMap, [dayId]: item };
     setDayProgressMap(nextMap);
-    localStorage.setItem("calisthenics_progress_v1", JSON.stringify(nextMap));
+    Storage.saveData("calisthenics_progress_v1", nextMap);
   };
 
   // Switch and start tracker for a specific focus day
@@ -147,7 +179,7 @@ export default function App() {
   // Change reps difficulty setting
   const handleChangeDifficulty = (level: "recruit" | "warrior" | "beast") => {
     setDifficulty(level);
-    localStorage.setItem("calisthenics_difficulty_v1", level);
+    Storage.saveData("calisthenics_difficulty_v1", level);
   };
 
   // Render Scaled Rep Count based on standard calisthenics scaling rules
@@ -180,7 +212,7 @@ export default function App() {
     const setGroup = isCore ? prog.coreSetsCompleted : prog.exerciseSetsCompleted;
     if (!setGroup[exerciseName]) {
       // Lazy init array in case it didn't structure
-      const targetDay = WEEKLY_PLAN.find((d) => d.id === activeDayId)!;
+      const targetDay = userWeeklyPlan.find((d) => d.id === activeDayId)!;
       const tEx = (isCore ? targetDay.core : targetDay.exercises)?.find((ex) => ex.name === exerciseName);
       const setsCount = tEx ? tEx.setsCount : 4;
       setGroup[exerciseName] = new Array(setsCount).fill(false);
@@ -226,7 +258,7 @@ export default function App() {
     const prog = getOrInitDayProgress(activeDayId);
     
     // Check if progress is completed
-    const dayData = WEEKLY_PLAN.find((d) => d.id === activeDayId)!;
+    const dayData = userWeeklyPlan.find((d) => d.id === activeDayId)!;
     
     // Confirm if not empty
     if (!prog.warmupCompleted) {
@@ -282,10 +314,10 @@ export default function App() {
 
     const nextLogs = [newLog, ...historyLogs];
     setHistoryLogs(nextLogs);
-    localStorage.setItem("calisthenics_warrior_history_v1", JSON.stringify(nextLogs));
+    Storage.saveData("calisthenics_warrior_history_v1", nextLogs);
 
     setStreak(newStreak);
-    localStorage.setItem("calisthenics_streak_v1", newStreak.toString());
+    Storage.saveData("calisthenics_streak_v1", newStreak.toString());
 
     // Update progress state to Fully completed!
     prog.isFullyCompleted = true;
@@ -308,9 +340,9 @@ export default function App() {
   // Reset all records to start clean
   const handleClearHistory = () => {
     if (window.confirm("CRITICAL PROTOCOL: Are you sure you want to completely erase your 7-Day compliance progress and logged combat metrics? This operation is irreversible.")) {
-      localStorage.removeItem("calisthenics_warrior_history_v1");
-      localStorage.removeItem("calisthenics_progress_v1");
-      localStorage.removeItem("calisthenics_streak_v1");
+      Storage.removeData("calisthenics_warrior_history_v1");
+      Storage.removeData("calisthenics_progress_v1");
+      Storage.removeData("calisthenics_streak_v1");
       setHistoryLogs([]);
       setDayProgressMap({});
       setStreak(0);
@@ -323,7 +355,7 @@ export default function App() {
     const prog = dayProgressMap[dayId];
     if (!prog) return { fraction: "0%", count: 0, total: 1, isFull: false };
     
-    const dayData = WEEKLY_PLAN.find((d) => d.id === dayId)!;
+    const dayData = userWeeklyPlan.find((d) => d.id === dayId)!;
     let checkedSets = 0;
     let totalSets = 0;
 
@@ -358,7 +390,7 @@ export default function App() {
       const resetMap = { ...dayProgressMap };
       delete resetMap[activeDayId];
       setDayProgressMap(resetMap);
-      localStorage.setItem("calisthenics_progress_v1", JSON.stringify(resetMap));
+      Storage.saveData("calisthenics_progress_v1", resetMap);
     }
   };
 
@@ -371,8 +403,47 @@ export default function App() {
 
   const activeProgress = getOrInitDayProgress(activeDayId);
 
+  // Derived state: count how many days are fully completed in the current run
+  const completedDaysCount = userWeeklyPlan.filter(day => {
+    return dayProgressMap[day.id]?.isFullyCompleted;
+  }).length;
+
+  const handleUpdatePlan = (newPlan: WorkoutDay[]) => {
+    setUserWeeklyPlan(newPlan);
+    Storage.saveData("calisthenics_weekly_plan_v1", newPlan);
+  };
+
+  const handleChallengeFriend = async () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('challengeDay', activeDayId);
+    if (activeProgress.isFullyCompleted && liveDuration > 0) {
+      url.searchParams.set('challengeTime', liveDuration.toString());
+    }
+    
+    const title = `Challenge: Beat my ${currentDay.name} workout!`;
+    const text = `I challenge you to beat my performance on the ${currentDay.name} routine. Can you do it?`;
+    
+    if (navigator.share && navigator.canShare) {
+      try {
+        await navigator.share({ title, text, url: url.toString() });
+      } catch (e) {
+        console.error("Share failed", e);
+      }
+    } else {
+      navigator.clipboard.writeText(url.toString());
+      alert("Challenge link copied to clipboard: " + url.toString());
+    }
+  };
+
   return (
-    <div id="main-calisthenics-app" className="min-h-screen bg-dark-bg text-stone-100 font-sans p-4 md:p-8 selection:bg-fire selection:text-white">
+    <div id="main-calisthenics-app" className="min-h-screen bg-dark-bg text-stone-100 font-sans p-4 md:p-8 selection:bg-fire selection:text-white relative">
+      <AnimatePresence>
+        {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+      </AnimatePresence>
+      <SyncStatusIndicator />
+      <div className="absolute top-4 right-4 z-50">
+        <LoginButton />
+      </div>
       
       {/* BACKGROUND FLOATING ACCENT AMBANCE COLOURED ORBS */}
       <div className="absolute top-10 left-[8%] w-80 h-80 bg-fire/10 rounded-full blur-[80px] pointer-events-none" />
@@ -402,6 +473,32 @@ export default function App() {
         />
       )}
 
+      {challengeInfo && (
+        <div className="max-w-6xl mx-auto mb-6 mt-8 md:mt-2 relative z-10">
+          <div className="bg-gold/10 border border-gold/40 rounded-xl p-4 flex items-center justify-between shadow-[0_0_20px_rgba(252,211,77,0.15)] animate-[pulse_3s_ease-in-out_infinite]">
+            <div className="flex items-center gap-4">
+              <div className="bg-gold/20 p-2 rounded-full border border-gold/40">
+                <Trophy className="h-5 w-5 text-gold" />
+              </div>
+              <div>
+                <h4 className="text-white font-condensed font-bold uppercase tracking-wider text-base">
+                  You've been challenged!
+                </h4>
+                <p className="text-gold/90 text-[11px] md:text-sm mt-0.5">
+                  Finish this workout {challengeInfo.time ? `in under ${formatTime(challengeInfo.time)}` : "and prove your strength"}.
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setChallengeInfo(null)}
+              className="text-gold/60 hover:text-gold transition-colors text-xs uppercase font-condensed font-bold tracking-widest px-3 py-1.5 border border-transparent hover:border-gold/30 rounded"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto space-y-8 relative">
         
         {/* 1. HERO BRAND HEADER SPLASH */}
@@ -409,33 +506,40 @@ export default function App() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center pt-24 pb-16 relative rounded-3xl overflow-hidden border border-dark-border/40 shadow-2xl"
+          className="text-center pt-16 pb-16 relative rounded-3xl overflow-hidden border border-dark-border/40 shadow-[0_0_50px_rgba(220,38,38,0.1)]"
         >
           {/* Animated Background Image */}
           <motion.img 
             initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.35 }}
+            animate={{ scale: 1, opacity: 0.25 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            src="https://picsum.photos/seed/calisthenics/1920/1080?grayscale=1"
+            src="https://storage.googleapis.com/mweb-prod-us-central1/5n7t92o2mdf0x26onx3x826p4/8b3c3735-3004-44ed-bf36-547dfb6efde3"
             alt="Workout background"
             referrerPolicy="no-referrer"
-            className="absolute inset-0 w-full h-full object-cover z-0"
+            className="absolute inset-0 w-full h-full object-cover z-0 mix-blend-screen"
           />
           <div className="absolute inset-0 z-0 bg-gradient-to-t from-dark-bg via-dark-bg/60 to-dark-bg/20" />
           
-          <div className="relative z-10 px-4">
-            <motion.div 
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "3.5rem", opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="absolute top-[-2rem] left-1/2 -translate-x-1/2 w-0.5 bg-gradient-to-bottom from-transparent to-fire" 
-            />
+          <div className="relative z-10 px-4 flex flex-col items-center">
+            
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              transition={{ delay: 0.2, duration: 0.8, type: "spring" }}
+              className="w-24 h-24 md:w-32 md:h-32 mb-6 rounded-full overflow-hidden shadow-[0_0_30px_rgba(220,38,38,0.3)] border border-red-500/20"
+            >
+               <img 
+                 src="https://storage.googleapis.com/mweb-prod-us-central1/5n7t92o2mdf0x26onx3x826p4/0c00de51-789a-41f2-be66-8fde03a891fa" 
+                 alt="App Logo" 
+                 className="w-full h-full object-cover mix-blend-screen"
+               />
+            </motion.div>
             
             <motion.span 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="font-condensed text-[11px] font-extrabold tracking-[0.35em] text-fire uppercase block mt-6 mb-2 drop-shadow-md"
+              className="font-condensed text-[11px] font-extrabold tracking-[0.35em] text-fire uppercase block mt-2 mb-2 drop-shadow-md"
             >
               ZERO EQUIPMENT · ABSOLUTE LEVERAGE · METICULOUS CONSISTENCY
             </motion.span>
@@ -565,6 +669,27 @@ export default function App() {
 
         {/* 3. WORKOUT WEEK TIMELINE GRID (7 Days selector cards) */}
         <section id="weekly-overview" className="space-y-3">
+          
+          {/* OVERALL PLAN PROGRESS BAR */}
+          <div className="mb-4 bg-neutral-950 border border-dark-border rounded-xl p-4 shadow-lg shadow-black/20">
+            <div className="flex justify-between items-end mb-2.5">
+               <span className="font-condensed font-extrabold tracking-wider text-neutral-400 uppercase text-[11px]">
+                 7-DAY WARRIOR PLAN PROGRESS
+               </span>
+               <span className="font-mono text-emerald-400 font-bold text-[11px]">
+                  {completedDaysCount} / 7 DAYS COMPLETED
+               </span>
+            </div>
+            <div className="h-2 w-full bg-neutral-900 border border-dark-border/50 rounded-full overflow-hidden relative">
+               <motion.div 
+                 initial={{ width: 0 }}
+                 animate={{ width: `${(completedDaysCount / 7) * 100}%` }}
+                 transition={{ duration: 1.2, ease: "easeOut" }}
+                 className="absolute top-0 left-0 h-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.8)]"
+               />
+            </div>
+          </div>
+
           <div className="flex justify-between items-center px-1">
             <span className="font-condensed text-xs font-bold uppercase tracking-wider text-neutral-400">
               TRAINING MATRIX WEEK TIMELINE
@@ -575,7 +700,7 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-            {WEEKLY_PLAN.map((day) => {
+            {userWeeklyPlan.map((day) => {
               const { fraction, count, total, isFull } = getDayCompletionsCount(day.id);
               const isActive = day.id === activeDayId;
 
@@ -630,7 +755,13 @@ export default function App() {
                         DAY 0{day.number}
                       </span>
                       {isFull && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,1)]" />
+                        <motion.div 
+                          initial={{ scale: 0 }} 
+                          animate={{ scale: 1 }} 
+                          transition={{ type: "spring" }}
+                        >
+                          <CheckCircle className="h-3.5 w-3.5 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                        </motion.div>
                       )}
                     </div>
                     <h3 className="font-bebas text-lg leading-tight tracking-wide text-white group-hover:text-fire transition">
@@ -706,6 +837,15 @@ export default function App() {
                 title="Wipe checklists for this day"
               >
                 CLEAR REPS
+              </button>
+
+              <button
+                onClick={handleChallengeFriend}
+                className="min-w-[44px] min-h-[44px] py-3 px-4 sm:py-2.5 sm:px-3 rounded-lg border border-gold/40 hover:border-gold hover:bg-gold/10 bg-neutral-950 text-xs sm:text-[10px] text-gold font-condensed font-bold uppercase tracking-wider transition duration-150 touch-manipulation flex items-center gap-2"
+                title="Challenge a friend with this routine"
+              >
+                <Share2 className="w-3.5 h-3.5 hidden sm:block" />
+                CHALLENGE
               </button>
             </div>
           </div>
@@ -1045,6 +1185,10 @@ export default function App() {
           {/* Tabs Selector buttons */}
           <div className="flex border-b border-dark-border/60 overflow-x-auto gap-2 text-stone-400">
             {[
+              { id: "leaderboard", label: "GLOBAL RANKING", icon: Trophy },
+              { id: "ai", label: "AI COACH", icon: Bot },
+              { id: "habits", label: "HABIT TRACKER", icon: ListTodo },
+              { id: "profile", label: "INJURY PROFILE", icon: User },
               { id: "nutrition", label: "MACRO CALCULATOR", icon: Flame },
               { id: "technique", label: "TECHNIQUE HUB", icon: BookOpen },
               { id: "rules", label: "WARRIOR RULES", icon: ShieldAlert },
@@ -1078,6 +1222,22 @@ export default function App() {
             
             {activeBentoTab === "technique" && (
               <TechniqueDrills />
+            )}
+
+            {activeBentoTab === "ai" && (
+              <AICoachChat currentPlan={userWeeklyPlan} onUpdatePlan={handleUpdatePlan} />
+            )}
+
+            {activeBentoTab === "leaderboard" && (
+              <LeaderboardSystem />
+            )}
+
+            {activeBentoTab === "habits" && (
+              <HabitTracker />
+            )}
+
+            {activeBentoTab === "profile" && (
+              <UserProfileSettings />
             )}
 
             {activeBentoTab === "rules" && (

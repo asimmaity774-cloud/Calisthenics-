@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { NutritionProfile, DailyIntake } from "../types";
 import { Scale, Target, Droplet, Flame, Sparkles, Plus, RotateCcw, Drumstick, RefreshCw, Footprints } from "lucide-react";
+import { Storage } from "../lib/storage";
 
 interface NutritionCalculatorProps {
   onProfileUpdated?: (profile: NutritionProfile) => void;
@@ -92,30 +93,31 @@ export default function NutritionCalculator({ onProfileUpdated }: NutritionCalcu
   // Load intake logs
   useEffect(() => {
     const todayStr = getTodayDateString();
-    const storedLS = localStorage.getItem(`calisthenics_nutrition_${todayStr}`);
-    if (storedLS) {
-      try {
-        const parsed = JSON.parse(storedLS);
-        setTodayLog({ ...parsed, steps: parsed.steps || 0 });
-      } catch (e) {
-        console.error("Failed loading nutrition log:", e);
+    Storage.getData(`calisthenics_nutrition_${todayStr}`).then((storedLS) => {
+      if (storedLS) {
+        try {
+          setTodayLog({ ...storedLS, steps: storedLS.steps || 0 });
+        } catch (e) {
+          console.error("Failed loading nutrition log:", e);
+        }
+      } else {
+        setTodayLog({
+          date: todayStr,
+          calories: 0,
+          protein: 0,
+          water: 0,
+          steps: 0
+        });
       }
-    } else {
-      setTodayLog({
-        date: todayStr,
-        calories: 0,
-        protein: 0,
-        water: 0,
-        steps: 0
-      });
-    }
+    });
   }, []);
 
   // Save intake logs
   const saveTodayLog = (newLog: DailyIntake) => {
     setTodayLog(newLog);
-    localStorage.setItem(`calisthenics_nutrition_${newLog.date}`, JSON.stringify(newLog));
+    Storage.saveData(`calisthenics_nutrition_${newLog.date}`, newLog);
   };
+
 
   const addWater = (ml: number) => {
     const nextLog = { ...todayLog, water: todayLog.water + ml };
